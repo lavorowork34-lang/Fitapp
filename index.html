@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrazione</title>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<!--Font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="stile.css">
+
+
+    <!--Per icona-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=routine" />
+    
+    
+    <script src="f.js"></script>
+
+
+</head>
+
+<body>
+<div class="generale">
+  <!--per allineare tutto al centro-->
+
+
+
+<div id="container">
+    <!--Video in loop-->
+    <div id="one">
+  <video src="video/video.mp4" autoplay muted loop playsinline></video>
+  <div class="color-overlay"></div>
+</div>
+
+    
+    <!--Registrazione-->
+
+<div id="container-one">
+  <div id="shadow"></div> <!-- Fuori da #two ma dentro container -->
+
+  <div id="two">
+    <div id="loginSection">
+      <h1>Registrazione</h1>
+      <input type="text" id="nome" placeholder="Nome" />
+      <input type="text" id="cognome" placeholder="Cognome" />
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <input type="number" id="età" placeholder="Età" />
+      <input type="number" id="altezza" placeholder="Altezza (cm)" />
+      <input type="number" id="peso" placeholder="Peso (kg)" />
+      <input type="number" id="BMI" placeholder="BMI" />
+      <input type="number" id="FAT" placeholder="FAT" />
+      <input type="number" id="massaMuscolare" placeholder="Massa muscolare" />
+      <input type="number" id="RM" placeholder="RM" />
+
+      <button onclick="Registrati()">Registrati</button>
+      </div>
+      <p id="loginStatus"></p>
+    </div>
+
+</div>
+
+    <script>
+        // Configura Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAD8IYgzEyIs7a62p2iCYHBs_VKESZjnI",
+            authDomain: "app-fitness-b7c26.firebaseapp.com",
+            projectId: "app-fitness-b7c26",
+            storageBucket: "app-fitness-b7c26.firebasestorage.app",
+            messagingSenderId: "150986445380",
+            appId: "1:150986445380:web:d54b2ce3aa12f0c1106211"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function Registrati() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const nome = document.getElementById('nome').value;
+            const cognome = document.getElementById('cognome').value;
+            const età = parseInt(document.getElementById('età').value) || null;
+            const altezza = parseFloat(document.getElementById('altezza').value) || null;
+            const peso = parseFloat(document.getElementById('peso').value) || null;
+            const BMI = parseFloat(document.getElementById('BMI').value) || null;
+            const FAT = parseFloat(document.getElementById('FAT').value) || null;
+            const massaMuscolare = parseFloat(document.getElementById('massaMuscolare').value) || null;
+            const RM = parseFloat(document.getElementById('RM').value) || null;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const userId = userCredential.user.uid;
+
+                    const userData = {
+                        nome,
+                        cognome,
+                        email,
+                        età,
+                        altezza,
+                        peso,
+                        BMI,
+                        FAT,
+                        "Massa muscolare": massaMuscolare,
+                        RM
+                    };
+
+                    return db.collection("Users").doc(userId).set(userData);
+                })
+                .then(() => {
+                    document.getElementById('loginStatus').textContent = " Registrazione completata con successo.";
+                })
+                .catch((error) => {
+                    console.error("Errore nella registrazione:", error);
+                    document.getElementById('loginStatus').textContent = "Errore" + get.error;
+                });
+        }
+    </script>
+
+
+<!-- Traduttore Google con tutte le lingue -->
+<div id="google_translate_element" style="position: fixed; top: 10px; right: 10px; z-index: 9999;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'it', // Lingua originale del sito
+      layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL, // Layout più moderno/orizzontale
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+
+<!-- Script Google Translate -->
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<!--Parte del LOGO-->
+<div class="container-logo">
+    <div class="faccia-trapezio"></div>
+    <div class="cerchio"></div>
+    <img src="immagini\logo.png" height="300px" width="300px">
+</div>
+
+<!--Bottone darkmode-->
+<button onclick="toggleDarkMode()" style="position: fixed; top: 10px; left: 10px; z-index: 9999;">
+<span class="material-symbols-outlined">
+routine
+</span> 
+  Cambia tema
+</button>
+
+</body>
+
+</html>

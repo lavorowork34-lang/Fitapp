@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FitHealth</title>
+  <link rel="stylesheet" href="grafica.css" />
+  <script src="funct.js"></script>
+  <script src="oridner.js"></script>
+
+  <!--Importazione font-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+
+  <!--Firebase Header-->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+</head>
+
+<body>
+  <!--Inizio dashboard-->
+  <div class="container">
+
+    <!--Menù laterale-->
+    <div class="menù">
+      <!-- Header mobile con menu a scorrimento (visibile solo su mobile) -->
+      <div class="mobile-header">
+        <div class="mobile-logo">FitHealth</div>
+        <div class="user-mobile" style="cursor:pointer;">
+          <a href="user-info.html"><img src="foto/user.png" height="40px" width="40px" alt="User Icon"></a>
+        </div>
+      </div>
+
+      <!-- Menu a scorrimento orizzontale per mobile -->
+      <div class="scroll-menu-container">
+        <div class="scroll-menu">
+          <a href="app.html" class="scroll-menu-item">
+            <img width="24" height="24" src="https://img.icons8.com/80EAFF/fluency-systems-filled/48/home.png"
+              alt="home" />
+            <span>Home</span>
+          </a>
+          <a href="../../blog/blog utenti/blog user/i.html" class="scroll-menu-item">
+            <img width="24" height="24" src="https://img.icons8.com/80EAFF/sf-black-filled/64/about.png" alt="about" />
+            <span>About</span>
+          </a>
+          <a href="mailto:lavorowork34@gmail.com" class="scroll-menu-item">
+            <img width="24" height="24" src="https://img.icons8.com/80EAFF/sf-black-filled/64/faq.png" alt="faq" />
+            <span>FAQ</span>
+          </a>
+          <a href="#" onclick="openSocialModal()" class="scroll-menu-item">
+            <img width="24" height="24" src="https://img.icons8.com/80EAFF/sf-regular-filled/48/monitor.png"
+              alt="monitor" />
+            <span>Social</span>
+          </a>
+          <a href="bluthuser.html" class="scroll-menu-item">
+            <img width="24" height="24" src="https://img.icons8.com/80EAFF/fluency-systems-filled/48/bluetooth.png"
+              alt="bluetooth" />
+            <span>Attività</span>
+          </a>
+          <button class="scroll-menu-item theme-button" onclick="toggleTheme()">
+            <img src="foto\luna.png" height="24px" width="24px">
+            <span>Tema</span>
+          </button>
+        </div>
+      </div>
+
+      <!--Informazioni utente (desktop)-->
+      <div class="user" style="cursor:pointer;">
+        <center><a href="user-info.html"><img src="foto/user.png" height="80px" width="80px" alt="User Icon"></a>
+        </center>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#"> <img width="30" height="30"
+                src="https://img.icons8.com/80EAFF/fluency-systems-filled/48/home.png" alt="home" /> Home</a></li>
+          <li><a href="../../blog/blog utenti/blog user/i.html"> <img width="30" height="30"
+                src="https://img.icons8.com/80EAFF/sf-black-filled/64/about.png" alt="about" />About</a></li>
+          <li><a href="mailto:lavorowork34@gmail.com"> <img width="30" height="30" src="https://img.icons8.com/80EAFF/sf-black-filled/64/faq.png"
+                alt="faq" />FAQ</a></li>
+          <li><a href="#" onclick="openSocialModal()"> <img width="30" height="30"
+                src="https://img.icons8.com/80EAFF/sf-regular-filled/48/monitor.png" alt="monitor" />Social</a></li>
+          <li><a href="bluthuser.html"> <img width="30" height="30"
+                src="https://img.icons8.com/80EAFF/fluency-systems-filled/48/bluetooth.png"
+                alt="bluetooth" />Attività</a></li>
+          <li>
+            <center>
+              <button onclick="toggleTheme()">
+                <p>Cambia tema</p>
+                <img src="foto\luna.png" height="40px" width="40px">
+              </button>
+            </center>
+          </li>
+        </ul>
+      </nav>
+    </div> <!-- fine .menù -->
+
+    <!--Contenitore di cards e nome utente-->
+    <div class="cards">
+      <h1>Bentornato <!--<span id="nome-utente"></span>--></h1>
+
+
+      <!--Cards sopra-->
+      <div class="card-b">
+        <div class="card-uno">
+          <a id="palestraLink" target="_blank"
+            style="@media (max-width: 1199.98px) and (min-width: 300px){ #palestraLink{font-size: 26px;}} ">Allenamento
+            ed esercizi</a><br>
+         <center><div id="palestraMessage" style="font-size: 15px; color: red; font-weight: bolder;"></div></center>
+
+          <img src="foto\onda.png" height="320px" width="600px">
+        </div>
+
+        <div class="card-two">
+          <a href="videopdf.html" id="pdl">Documenti e PDF</a><br>
+
+<!--Stile per titolo card-two-->
+          <style>
+            @media (max-width: 1199.98px) and (min-width: 300px) {
+              #pdl {
+                font-size: 26px;
+              }
+            }
+          </style>
+
+          <img src="foto\doc.png" height="290px" width="540px">
+        </div>
+      </div>
+
+      <!--Cards sotto-->
+      <div class="card-s">
+
+        <div class="cuno">
+          <center>
+            <h2>Passi</h2>
+          </center>
+          <div class="cerchio-1">
+            <div class="cerchio-2">
+              <center>
+
+                <h3>Oggi</h3>
+                <p class="step-goal-display">10.000</p>
+              </center>
+
+              <div class="container-passi">
+                <div class="allinea-icona">
+                  <img width="34" height="34" src="https://img.icons8.com/00BFFF/pastel-glyph/64/boot-print--v2.png"
+                    alt="boot-print--v2" />
+                </div>
+                <div class="allinea-dati">
+                  <p class="blue">Passi fatti</p>
+                  <!-- Aggiungi solo title="Clicca per modificare" se vuoi, il JS lo gestirà automaticamente -->
+                  <p class="passi">0</p>
+                </div>
+              </div>
+
+              </center>
+            </div> <!-- fine .cerchio-2 -->
+          </div> <!-- fine .cerchio-1 -->
+
+          <!-- Contenuto per responsive (senza cerchi) -->
+          <div class="content-passi">
+            <h3>Oggi</h3>
+            <p class="step-goal-display">10.000</p>
+
+            <div class="container-passi">
+              <div class="allinea-icona">
+                <img width="34" height="34" src="https://img.icons8.com/00BFFF/pastel-glyph/64/boot-print--v2.png"
+                  alt="boot-print--v2" />
+              </div>
+              <div class="allinea-dati">
+                <p class="blue">Passi fatti</p>
+
+                <p class="passi">0</p>
+
+              </div>
+            </div>
+
+            <!-- Barra di progresso -->
+            <div class="progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+              <div class="progress-text">0 / 10.000 passi</div>
+            </div>
+          </div>
+        </div> <!-- fine .cuno -->
+
+        <div class="cdue">
+          <center>
+            <h2>Peso</h2>
+          </center>
+          <div class="cerchio-1">
+            <div class="cerchio-2">
+              <center>
+                <h3>01 01 2025</h3>
+                <p>90 kg</p>
+              </center>
+
+              <!--Sezione dei dati peso-->
+              <center>
+                <div class="container-valutazione">
+                  <h4>Scorsa valutazione</h4>
+
+                  <div class="allinea-icona">
+                    <p class="kg">92 kg</p>
+                    <!--Icona-->
+                    <img src="foto\frecciasu.png" height="32px" width="40px" style="margin-top: 10px; ">
+                    <!--Icona nel caso il peso scende-->
+                  </div>
+                </div>
+              </center>
+            </div> <!-- fine .cerchio-2 -->
+          </div> <!-- fine .cerchio-1 -->
+
+          <!-- Contenuto per responsive (senza cerchi) -->
+          <div class="content-peso">
+            <h3>01 01 2025</h3>
+            <p></p>
+
+            <div class="container-valutazione">
+              <h4>Scorsa valutazione</h4>
+              <div class="allinea-icona">
+                <p class="kg"></p>
+                <img src="foto\frecciasu.png" height="32px" width="40px" style="margin-top: 10px;">
+              </div>
+            </div>
+          </div>
+        </div> <!-- fine .cdue -->
+
+        <div class="ctre">
+          <center>
+            <h3>Piano alimentare</h3>
+          </center>
+          <!--Allego il PDF scaricabile-->
+          <div class="download-container">
+            <a href="#" download>
+              <img src="foto\Piano.png" alt="Scarica PDF" class="piano-img" />
+            </a>
+
+
+            <p>
+              <a id="pdfLink" href="#" style="pointer-events:none; opacity:0.5; text-decoration:none; color: rgb(0, 153, 255);">Consulta alimentare il piano qui</a>
+            <div id="message" style="font-size: 15px; color: red; font-weight: bolder;"></div>
+
+            </p>
+
+
+          </div>
+        </div> <!-- fine .ctre -->
+
+      </div> <!-- fine .card-s -->
+    </div> <!-- fine .cards -->
+
+    <!-- Sezione orologio e curiosita -->
+    <div class="Progressi">
+      <img src="foto/fitness.jpg" alt="Fitness">
+      <div class="orologi">
+        <p id="oraCorrente">Ora corrente: --:--:--</p>
+        <p id="timer">Tempo trascorso: 0 secondi</p>
+      </div>
+    </div>
+
+    <script>
+      //Piano alimentare 
+
+
+      // Config Firebase
+      const firebaseConfig = {
+        apiKey: "AIzaSyCAD8IYgzEyIs7a62p2iCYHBs_VKESZjnI",
+        authDomain: "app-fitness-b7c26.firebaseapp.com",
+        projectId: "app-fitness-b7c26",
+        storageBucket: "app-fitness-b7c26.firebasestorage.app",
+        messagingSenderId: "150986445380",
+        appId: "1:150986445380:web:d54b2ce3aa12f0c1106211"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      const pdfLink = document.getElementById('pdfLink');
+      const messageDiv = document.getElementById('message');
+
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          try {
+            const userDoc = await db.collection('Users').doc(user.uid).get();
+
+            if (!userDoc.exists) {
+              pdfLink.href = '#';
+              pdfLink.style.pointerEvents = 'none';
+              pdfLink.style.opacity = '0.5';
+              messageDiv.textContent = "Nessun piano trovato per l'utente.";
+              return;
+            }
+
+            const docData = userDoc.data();
+
+            if (!docData.PDF || docData.PDF.length === 0) {
+              pdfLink.href = '#';
+              pdfLink.style.pointerEvents = 'none';
+              pdfLink.style.opacity = '0.5';
+              messageDiv.textContent = "Nessun piano PDF disponibile.";
+              return;
+            }
+
+            const link = docData.PDF[0];
+            pdfLink.href = link;
+            pdfLink.style.pointerEvents = 'auto';
+            pdfLink.style.opacity = '1';
+            messageDiv.textContent = "";
+
+          } catch (error) {
+            pdfLink.href = '#';
+            pdfLink.style.pointerEvents = 'none';
+            pdfLink.style.opacity = '0.5';
+            messageDiv.textContent = "Errore nel caricamento dei dati.";
+            console.error(error);
+          }
+
+        } else {
+          pdfLink.href = '#';
+          pdfLink.style.pointerEvents = 'none';
+          pdfLink.style.opacity = '0.5';
+          messageDiv.innerHTML = "Devi effettuare il login<br>prima di vedere il piano alimentare.";
+        }
+      });
+
+
+
+      // Funzione per caricare il piano palestra
+      const palestraLink = document.getElementById('palestraLink');
+      const palestraMessage = document.getElementById('palestraMessage');
+
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          try {
+            const userDoc = await db.collection('Users').doc(user.uid).get();
+
+            if (!userDoc.exists) {
+              palestraLink.href = '#';
+              palestraLink.style.pointerEvents = 'none';
+              palestraLink.style.opacity = '0.5';
+              palestraMessage.textContent = "Nessun dato trovato per questo utente.";
+              return;
+            }
+
+            const docData = userDoc.data();
+
+            // Se palestra è un array
+            if (!Array.isArray(docData.palestra) || docData.palestra.length === 0) {
+              palestraLink.href = '#';
+              palestraLink.style.pointerEvents = 'none';
+              palestraLink.style.opacity = '0.5';
+              palestraMessage.textContent = "Nessun piano palestra disponibile.";
+              return;
+            }
+
+            // Prendiamo il primo link valido
+            const firstValidLink = docData.palestra.find(link => typeof link === "string" && link.trim() !== "");
+
+            if (!firstValidLink) {
+              palestraLink.href = '#';
+              palestraLink.style.pointerEvents = 'none';
+              palestraLink.style.opacity = '0.5';
+              palestraMessage.textContent = "Nessun piano palestra valido trovato.";
+              return;
+            }
+
+            palestraLink.href = firstValidLink;
+            palestraLink.style.pointerEvents = 'auto';
+            palestraLink.style.opacity = '1';
+            palestraMessage.textContent = "";
+
+          } catch (error) {
+            palestraLink.href = '#';
+            palestraLink.style.pointerEvents = 'none';
+            palestraLink.style.opacity = '0.5';
+            palestraMessage.textContent = "Errore nel caricamento del piano palestra.";
+            console.error(error);
+          }
+
+        } else {
+          palestraLink.href = '#';
+          palestraLink.style.pointerEvents = 'none';
+          palestraLink.style.opacity = '0.5';
+          palestraMessage.textContent = "Devi effettuare il login per vedere il piano palestra.";
+        }
+      });
+
+    </script>
+
+
+
+  </div> <!-- fine .container -->
+
+
+
+  <!--Start cookieyes banner  <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/54d13010a8a5859d19bf4d30/script.js"></script> End cookieyes banner -->
+
+
+
+
+  <!--Chatbot IA assistenza-->
+
+
+  <!-- Modal Social Share -->
+  <div id="socialModal" class="social-modal">
+    <div class="social-modal-content">
+      <div class="social-modal-header">
+        <h2><i class="fas fa-share-alt"></i> Condividi l'App Fitness</h2>
+        <span class="social-close" onclick="closeSocialModal()">&times;</span>
+      </div>
+      <div class="social-modal-body">
+        <div class="app-preview-section">
+          <div class="app-info-card">
+            <div class="app-icon">
+              <!--<img src="foto/fitness-icon.png" alt="App Icon" onerror="this.src='https://via.placeholder.com/80x80/007BFF/white?text=FIT'">
+            -->
+            </div>
+            <div class="app-details">
+              <h3>🏃‍♂️ Fitness SmartWatch App</h3>
+              <p class="app-tagline">Potenzia il tuo allenamento con tecnologia avanzata</p>
+              <div class="app-features">
+                <span class="feature-tag">📱 SmartWatch</span>
+                <span class="feature-tag">💓 Cardio Monitor</span>
+                <span class="feature-tag">📊 Analytics</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="link-generation-section">
+          <h4>🔗 Link di Condivisione</h4>
+          <div class="link-container">
+            <input type="text" id="shareLink" readonly value="../../../blog/blog utenti/blog user/i.html#download-app"
+              class="share-link-input">
+            <button onclick="copyLink()" class="copy-btn">
+              <i class="fas fa-copy"></i> Copia
+            </button>
+          </div>
+          <p class="link-description">Condividi questo link per far scaricare l'app ai tuoi amici!</p>
+        </div>
+
+        <div class="social-share-buttons">
+          <h4>📢 Condividi su Social</h4>
+          <div class="social-buttons-grid">
+            <button class="social-share-btn facebook" onclick="shareOnFacebook()">
+              <i class="fab fa-facebook-f"></i>
+              <span>Facebook</span>
+            </button>
+            <button class="social-share-btn twitter" onclick="shareOnTwitter()">
+              <i class="fab fa-twitter"></i>
+              <span>Twitter</span>
+            </button>
+            <button class="social-share-btn linkedin" onclick="shareOnLinkedIn()">
+              <i class="fab fa-linkedin-in"></i>
+              <span>LinkedIn</span>
+            </button>
+            <button class="social-share-btn whatsapp" onclick="shareOnWhatsApp()">
+              <i class="fab fa-whatsapp"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button class="social-share-btn telegram" onclick="shareOnTelegram()">
+              <i class="fab fa-telegram-plane"></i>
+              <span>Telegram</span>
+            </button>
+            <button class="social-share-btn email" onclick="shareViaEmail()">
+              <i class="fas fa-envelope"></i>
+              <span>Email</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="qr-code-section">
+          <h4>📱 QR Code</h4>
+          <div class="qr-container">
+            <div class="qr-code-placeholder">
+              <i class="fas fa-qrcode"></i>
+              <p>Scansiona per scaricare</p>
+            </div>
+            <button onclick="generateQR()" class="generate-qr-btn">Genera QR Code</button>
+          </div>
+        </div>
+      </div>
+      <div class="social-modal-footer">
+        <p><i class="fas fa-info-circle"></i> Aiuta i tuoi amici a raggiungere i loro obiettivi fitness!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Font Awesome per le icone -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <script>
+    // Funzioni per il modal social
+    function openSocialModal() {
+      document.getElementById('socialModal').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSocialModal() {
+      document.getElementById('socialModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Chiudi modal cliccando fuori
+    window.onclick = function (event) {
+      const modal = document.getElementById('socialModal');
+      if (event.target == modal) {
+        closeSocialModal();
+      }
+    }
+
+    // Copia link negli appunti
+    function copyLink() {
+      const linkInput = document.getElementById('shareLink');
+      linkInput.select();
+      linkInput.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(linkInput.value).then(() => {
+        const copyBtn = document.querySelector('.copy-btn');
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copiato!';
+        copyBtn.style.backgroundColor = '#28a745';
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.style.backgroundColor = '';
+        }, 2000);
+      });
+    }
+
+    // Funzioni di condivisione social
+    function shareOnFacebook() {
+      const url = encodeURIComponent(document.getElementById('shareLink').value);
+      const text = encodeURIComponent('🏃‍♂️ Scopri la nuova App Fitness SmartWatch! Potenzia il tuo allenamento con tecnologia avanzata.');
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnTwitter() {
+      const url = encodeURIComponent(document.getElementById('shareLink').value);
+      const text = encodeURIComponent('🏃‍♂️ Scopri la nuova App Fitness SmartWatch! Potenzia il tuo allenamento con tecnologia avanzata. #Fitness #SmartWatch #Health');
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnLinkedIn() {
+      const url = encodeURIComponent(document.getElementById('shareLink').value);
+      const title = encodeURIComponent('App Fitness SmartWatch');
+      const summary = encodeURIComponent('Potenzia il tuo allenamento con la nuova app fitness per smartwatch');
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${summary}`, '_blank', 'width=600,height=400');
+    }
+
+    function shareOnWhatsApp() {
+      const url = encodeURIComponent(document.getElementById('shareLink').value);
+      const text = encodeURIComponent('🏃‍♂️ Ciao! Ho trovato questa fantastica App Fitness per SmartWatch. Potenzia il tuo allenamento con tecnologia avanzata! Dai un\'occhiata: ');
+      window.open(`https://wa.me/?text=${text}${url}`, '_blank');
+    }
+
+    function shareOnTelegram() {
+      const url = encodeURIComponent(document.getElementById('shareLink').value);
+      const text = encodeURIComponent('🏃‍♂️ Scopri la nuova App Fitness SmartWatch! Potenzia il tuo allenamento con tecnologia avanzata.');
+      window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+    }
+
+    function shareViaEmail() {
+      const url = document.getElementById('shareLink').value;
+      const subject = encodeURIComponent('🏃‍♂️ App Fitness SmartWatch - Potenzia il tuo allenamento!');
+      const body = encodeURIComponent(`Ciao!
+
+Ho trovato questa fantastica App Fitness per SmartWatch che penso possa interessarti.
+
+🏃‍♂️ Fitness SmartWatch App
+Potenzia il tuo allenamento con tecnologia avanzata
+
+Caratteristiche principali:
+• 📱 Compatibile con SmartWatch
+• 💓 Monitoraggio cardio in tempo reale
+• 📊 Analytics avanzate dei tuoi progressi
+• 🎯 Allenamenti personalizzati
+• 📈 Tracciamento obiettivi
+
+Scarica l'app qui: ${url}
+
+Buon allenamento!`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    function generateQR() {
+      const qrContainer = document.querySelector('.qr-code-placeholder');
+      const url = document.getElementById('shareLink').value;
+
+      // Simulazione generazione QR (in produzione useresti una libreria come qrcode.js)
+      qrContainer.innerHTML = `
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}" alt="QR Code">
+        <p>Scansiona per scaricare</p>
+      `;
+    }
+  </script>
+
+  
+
+</body>
+
+</html>

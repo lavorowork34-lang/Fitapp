@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video e PDF - AppFitness</title>
+
+  <!-- Font Import -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    /* CSS Custom Properties */
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --bg-card: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent-primary: #3b82f6;
+      --accent-secondary: #1d4ed8;
+      --accent-light: #dbeafe;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-light: #1e3a8a;
+      --border-color: #475569;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.2);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+    }
+
+    /* Reset & Base Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: var(--transition);
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo i {
+      color: var(--accent-primary);
+      font-size: 1.75rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-container {
+      position: relative;
+      display: none;
+    }
+
+    .search-input {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 0.5rem 1rem 0.5rem 2.5rem;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+      width: 250px;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    @media (min-width: 768px) {
+      .search-container {
+        display: block;
+      }
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      border-radius: var(--radius-lg);
+      padding: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    /* Navigation Breadcrumb */
+    .breadcrumb {
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .breadcrumb-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .breadcrumb a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .breadcrumb a:hover {
+      color: var(--accent-primary);
+    }
+
+    .breadcrumb-separator {
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-current {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+      width: 3rem;
+      height: 3rem;
+      margin: 0 auto 1rem;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--accent-primary);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+
+    /* Content Sections */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .content-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .content-section:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .section-header {
+      background: var(--bg-tertiary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-title i {
+      color: var(--accent-primary);
+      font-size: 1.5rem;
+    }
+
+    .section-count {
+      background: var(--accent-primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+    }
+
+    .section-body {
+      padding: 1.5rem;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      gap: 1rem;
+    }
+
+    .spinner {
+      width: 2rem;
+      height: 2rem;
+      border: 2px solid var(--border-color);
+      border-top-color: var(--accent-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Content Items */
+    .content-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .content-item {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-item:hover {
+      border-color: var(--accent-primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .content-item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .content-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .content-item-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .content-item-url {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      word-break: break-all;
+      line-height: 1.3;
+    }
+
+    .content-item-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .action-button {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      padding: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      font-size: 0.875rem;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .action-button:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      background: var(--accent-light);
+    }
+
+    .action-button.primary {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: white;
+    }
+
+    .action-button.primary:hover {
+      background: var(--accent-secondary);
+      border-color: var(--accent-secondary);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-message {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Error State */
+    .error-state {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+
+    .error-icon {
+      font-size: 3rem;
+      color: var(--error-color);
+      margin-bottom: 1rem;
+      opacity: 0.7;
+    }
+
+    .error-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--error-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .error-message {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 1.5rem 1rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .content-item-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+      }
+
+      .content-item-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    /* Scrollbar Styling */
+    .section-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .section-body::-webkit-scrollbar-track {
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+    }
+
+    .section-body::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 3px;
+    }
+
+    .section-body::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Animations */
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .slide-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideUp 0.6s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body data-theme="light">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="app.html" class="logo">
+        <i class="fas fa-dumbbell"></i>
+        <span>AppFitness</span>
+      </a>
+      
+      <div class="header-actions">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Cerca video o PDF..." id="searchInput">
+        </div>
+        
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambia tema">
+          <i class="fas fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb">
+    <div class="breadcrumb-content">
+      <a href="app.html"><i class="fas fa-home"></i> Home</a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">Video e PDF</span>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Page Header -->
+    <div class="page-header fade-in">
+      <h1 class="page-title">📚 La Tua Biblioteca Multimediale</h1>
+      <p class="page-subtitle">
+        Accedi ai tuoi video di allenamento e documenti PDF personalizzati. 
+        Tutti i contenuti sono sincronizzati e sempre disponibili.
+      </p>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar fade-in">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="stat-number" id="videoCount">0</div>
+        <div class="stat-label">Video Disponibili</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="stat-number" id="pdfCount">0</div>
+        <div class="stat-label">Documenti PDF</div>
+      </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="content-grid slide-up">
+      <!-- Video Section -->
+      <section class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-video"></i>
+            Video di Allenamento
+          </h2>
+          <span class="section-count" id="videoCountBadge">0</span>
+        </div>
+        <div class="section-body" id="videoSection">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span class="loading-text">Caricamento video in corso...</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- PDF Section -->
+      <section class="content-section">
+        <div class="section-header">
+          <h2 class="section-title">
+            <i class="fas fa-file-pdf"></i>
+            Documenti PDF
+          </h2>
+          <span class="section-count" id="pdfCountBadge">0</span>
+        </div>
+        <div class="section-body" id="pdfSection">
+          <div class="loading">
+            <div class="spinner"></div>
+            <span class="loading-text">Caricamento documenti in corso...</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCAD8IYgzEyIs7a62p2iCYHBs_VKESZjnI",
+      authDomain: "app-fitness-b7c26.firebaseapp.com",
+      projectId: "app-fitness-b7c26",
+      storageBucket: "app-fitness-b7c26.firebasestorage.app",
+      messagingSenderId: "150986445380",
+      appId: "1:150986445380:web:d54b2ce3aa12f0c1106211"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // DOM Elements
+    const videoSection = document.getElementById('videoSection');
+    const pdfSection = document.getElementById('pdfSection');
+    const videoCount = document.getElementById('videoCount');
+    const pdfCount = document.getElementById('pdfCount');
+    const videoCountBadge = document.getElementById('videoCountBadge');
+    const pdfCountBadge = document.getElementById('pdfCountBadge');
+    const searchInput = document.getElementById('searchInput');
+
+    // Global data storage
+    let allVideos = [];
+    let allPdfs = [];
+    let filteredVideos = [];
+    let filteredPdfs = [];
+
+    // Utility Functions
+    function getFileNameFromUrl(url) {
+      try {
+        const pathname = new URL(url).pathname;
+        const fileName = pathname.split('/').pop();
+        return decodeURIComponent(fileName) || url;
+      } catch {
+        return url.split('/').pop() || url;
+      }
+    }
+
+    function truncateUrl(url, maxLength = 50) {
+      return url.length > maxLength ? url.substring(0, maxLength) + '...' : url;
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Could add a toast notification here
+      });
+    }
+
+    // Render Functions
+    function renderVideoList(videos) {
+      if (!videos || videos.length === 0) {
+        videoSection.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-video-slash empty-icon"></i>
+            <h3 class="empty-title">Nessun video disponibile</h3>
+            <p class="empty-message">Non sono stati trovati video per il tuo account.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const videoList = videos.map((url, index) => `
+        <li class="content-item fade-in" style="animation-delay: ${index * 0.1}s">
+          <div class="content-item-header">
+            <div class="content-item-info">
+              <h4 class="content-item-title">${getFileNameFromUrl(url)}</h4>
+              <p class="content-item-url">${truncateUrl(url)}</p>
+            </div>
+            <div class="content-item-actions">
+              <button class="action-button" onclick="copyToClipboard('${url}')" title="Copia URL">
+                <i class="fas fa-copy"></i>
+              </button>
+              <a href="${url}" target="_blank" class="action-button primary" title="Apri video">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </li>
+      `).join('');
+
+      videoSection.innerHTML = `<ul class="content-list">${videoList}</ul>`;
+    }
+
+    function renderPdfList(pdfs) {
+      if (!pdfs || pdfs.length === 0) {
+        pdfSection.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-file-pdf empty-icon"></i>
+            <h3 class="empty-title">Nessun documento PDF</h3>
+            <p class="empty-message">Non sono stati trovati documenti PDF per il tuo account.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const pdfList = pdfs.map((url, index) => `
+        <li class="content-item fade-in" style="animation-delay: ${index * 0.1}s">
+          <div class="content-item-header">
+            <div class="content-item-info">
+              <h4 class="content-item-title">${getFileNameFromUrl(url)}</h4>
+              <p class="content-item-url">${truncateUrl(url)}</p>
+            </div>
+            <div class="content-item-actions">
+              <button class="action-button" onclick="copyToClipboard('${url}')" title="Copia URL">
+                <i class="fas fa-copy"></i>
+              </button>
+              <a href="${url}" target="_blank" class="action-button primary" title="Apri PDF">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </div>
+          </div>
+        </li>
+      `).join('');
+
+      pdfSection.innerHTML = `<ul class="content-list">${pdfList}</ul>`;
+    }
+
+    function renderErrorState(section, message) {
+      section.innerHTML = `
+        <div class="error-state">
+          <i class="fas fa-exclamation-triangle error-icon"></i>
+          <h3 class="error-title">Errore nel caricamento</h3>
+          <p class="error-message">${message}</p>
+        </div>
+      `;
+    }
+
+    function updateStats() {
+      const videoTotal = filteredVideos.length;
+      const pdfTotal = filteredPdfs.length;
+
+      videoCount.textContent = videoTotal;
+      pdfCount.textContent = pdfTotal;
+      videoCountBadge.textContent = videoTotal;
+      pdfCountBadge.textContent = pdfTotal;
+    }
+
+    // Search Functionality
+    function filterContent(query) {
+      const lowercaseQuery = query.toLowerCase();
+      
+      filteredVideos = allVideos.filter(url => 
+        url.toLowerCase().includes(lowercaseQuery) ||
+        getFileNameFromUrl(url).toLowerCase().includes(lowercaseQuery)
+      );
+      
+      filteredPdfs = allPdfs.filter(url => 
+        url.toLowerCase().includes(lowercaseQuery) ||
+        getFileNameFromUrl(url).toLowerCase().includes(lowercaseQuery)
+      );
+
+      renderVideoList(filteredVideos);
+      renderPdfList(filteredPdfs);
+      updateStats();
+    }
+
+    // Theme Management
+    function initializeTheme() {
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const body = document.body;
+
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      body.setAttribute('data-theme', savedTheme);
+      updateThemeIcon(savedTheme);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+      });
+
+      function updateThemeIcon(theme) {
+        themeIcon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+      }
+    }
+
+    // Initialize Search
+    function initializeSearch() {
+      let searchTimeout;
+      
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          filterContent(e.target.value);
+        }, 300);
+      });
+    }
+
+    // Firebase Authentication & Data Loading
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = '../login/login.html';
+        return;
+      }
+
+      try {
+        const docRef = db.collection('Users').doc(user.uid);
+        const docSnap = await docRef.get();
+
+        if (!docSnap.exists) {
+          renderErrorState(videoSection, 'Nessun dato disponibile per questo utente.');
+          renderErrorState(pdfSection, 'Nessun dato disponibile per questo utente.');
+          return;
+        }
+
+        const data = docSnap.data();
+        allVideos = Array.isArray(data.VIDEO) ? data.VIDEO : [];
+        allPdfs = Array.isArray(data.PDF) ? data.PDF : [];
+        
+        // Initialize filtered arrays
+        filteredVideos = [...allVideos];
+        filteredPdfs = [...allPdfs];
+
+        // Render content
+        renderVideoList(filteredVideos);
+        renderPdfList(filteredPdfs);
+        updateStats();
+
+      } catch (error) {
+        console.error('Error loading data:', error);
+        renderErrorState(videoSection, 'Errore nel caricamento dei video.');
+        renderErrorState(pdfSection, 'Errore nel caricamento dei PDF.');
+      }
+    });
+
+    // Initialize App
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeTheme();
+      initializeSearch();
+    });
+  </script>
+</body>
+</html>
