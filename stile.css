@@ -28,7 +28,7 @@ body {
   padding-right: 1rem;
 
   min-height: 100vh;
-  background-image: url("immagini/bkgb.png");
+  background-image: url("bkgb.png");
       transition: background-color 0.3s ease, color 0.3s ease;
 
 }
@@ -358,7 +358,7 @@ button[onclick="toggleDarkMode()"]:hover .material-symbols-outlined {
 /* darkmode */
 
 body.dark-mode {
-  background-image: url("immagini/bkgn.png");
+  background-image: url("bkgn.png");
     color: #e0e0e0;
 }
 
@@ -650,4 +650,5 @@ body {
     padding: 10px; /* aggiunto padding per migliore UX */
   }
 }
+
 }
