@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>Palestra - Allenamento con Video</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg-primary: #f5f7fa;
+      --bg-secondary: white;
+      --bg-tertiary: #f9fafb;
+      --text-primary: #1e293b;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --text-info: #475569;
+      --accent-primary: #3b82f6;
+      --accent-secondary: #2563eb;
+      --accent-light: #e0e7ff;
+      --border-color: #e2e8f0;
+      --shadow-light: rgb(0 0 0 / 0.1);
+      --shadow-medium: rgb(0 0 0 / 0.12);
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-info: #cbd5e1;
+      --accent-primary: #3b82f6;
+      --accent-secondary: #2563eb;
+      --accent-light: #1e3a8a;
+      --border-color: #475569;
+      --shadow-light: rgb(0 0 0 / 0.3);
+      --shadow-medium: rgb(0 0 0 / 0.4);
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* Menu Sidebar */
+    .menu {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px var(--shadow-light);
+      padding: 1.5rem 1rem 2rem;
+      width: 100%;
+      max-width: 280px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      position: sticky;
+      top: 1rem;
+      height: fit-content;
+      transition: background-color 0.3s ease;
+    }
+
+    .user img {
+      border-radius: 50%;
+      border: 3px solid var(--accent-primary);
+      transition: transform 0.3s ease;
+    }
+
+    .user img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--accent-primary);
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      width: 100%;
+    }
+
+    nav ul li {
+      margin-bottom: 1rem;
+    }
+
+    nav ul li a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      padding: 0.6rem 1rem;
+      border-radius: 0.75rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+      text-decoration: none;
+    }
+
+    nav ul li a:hover {
+      background-color: var(--accent-primary);
+      color: white;
+    }
+
+    nav ul li:last-child {
+      margin-top: 2rem;
+    }
+
+    nav ul li button {
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li button:hover {
+      background-color: var(--accent-secondary);
+    }
+
+    /* Layout for main content and sidebar */
+    @media (min-width: 1024px) {
+      .container {
+        flex-direction: row;
+        gap: 2rem;
+        padding-top: 2rem;
+      }
+    }
+
+    /* Allenamento Section */
+    .allenamento {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px var(--shadow-light);
+      padding: 2rem 2rem 3rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      min-width: 0;
+      transition: background-color 0.3s ease;
+    }
+
+    .allenamento h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .allenamento p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Exercise Counter */
+    .exercise-counter {
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--accent-secondary);
+      background: var(--accent-light);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      width: fit-content;
+      user-select: none;
+      box-shadow: 0 2px 8px rgb(37 99 235 / 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    /* Stats Section */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .stat-item {
+      background: var(--bg-tertiary);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px var(--shadow-light);
+      transition: background-color 0.3s ease;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-primary);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      background: var(--accent-light);
+      border-radius: 9999px;
+      height: 12px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px var(--shadow-light);
+    }
+
+    .progress-fill {
+      background: var(--accent-primary);
+      height: 100%;
+      width: 0%;
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 8px var(--accent-primary);
+    }
+
+    /* Timer Display */
+    .timer-display {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--accent-primary);
+      text-align: center;
+      margin: 1rem 0;
+      text-shadow: 0 0 20px var(--accent-primary);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .timer-label {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Workout Section (each exercise) */
+    .workout-section {
+      background: var(--bg-tertiary);
+      border-radius: 1rem;
+      box-shadow: 0 6px 15px var(--shadow-light);
+      padding: 1.5rem 1.5rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .workout-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px var(--shadow-medium);
+    }
+
+    .workout-section.hidden {
+      display: none;
+    }
+
+    .workout-section.active {
+      border: 2px solid var(--accent-primary);
+      box-shadow: 0 0 20px rgb(59 130 246 / 0.3);
+    }
+
+    .exercise-item {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .exercise-item {
+        flex-direction: row;
+        gap: 2rem;
+      }
+    }
+
+    .exercise-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .exercise-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      user-select: none;
+    }
+
+    .exercise-info p {
+      font-size: 1rem;
+      color: var(--text-info);
+      line-height: 1.4;
+      margin: 0.15rem 0;
+    }
+
+    .exercise-info strong {
+      color: var(--text-secondary);
+    }
+
+    /* Video container */
+    .video-container {
+      flex-shrink: 0;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgb(59 130 246 / 0.3);
+      max-width: 400px;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: black;
+      position: relative;
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 1rem;
+      display: block;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 600;
+      border-radius: 1rem;
+      z-index: 10;
+    }
+
+    /* Completion Message */
+    .completion-message {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, var(--success-color), var(--accent-primary));
+      color: white;
+      border-radius: 1rem;
+      box-shadow: 0 15px 35px rgb(16 185 129 / 0.4);
+      margin: 2rem 0;
+      animation: slideInUp 0.5s ease-out;
+    }
+
+    @keyframes slideInUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .completion-message h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .completion-message p {
+      font-size: 1.25rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    /* No exercises / loading */
+    .no-exercises {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .no-exercises h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Controls Buttons */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: var(--accent-primary);
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 15px rgb(59 130 246 / 0.4);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+      user-select: none;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-primary {
+      width: 64px;
+      height: 64px;
+    }
+
+    .btn-secondary {
+      width: 70px;
+      height: 70px;
+      background: var(--accent-secondary);
+      box-shadow: 0 8px 20px rgb(37 99 235 / 0.6);
+    }
+
+    .btn:hover:not(:disabled) {
+      background-color: var(--accent-secondary);
+      box-shadow: 0 10px 25px rgb(37 99 235 / 0.8);
+      transform: scale(1.1);
+    }
+
+    .btn img {
+      filter: invert(100%) brightness(120%);
+      width: 32px;
+      height: 32px;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 2rem;
+      right: 2rem;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 25px var(--shadow-medium);
+      border-left: 4px solid var(--accent-primary);
+      z-index: 1000;
+      animation: slideInRight 0.3s ease-out;
+      max-width: 300px;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .notification.success {
+      border-left-color: var(--success-color);
+    }
+
+    .notification.warning {
+      border-left-color: var(--warning-color);
+    }
+
+    .notification.error {
+      border-left-color: var(--danger-color);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+      .menù {
+        max-width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 1rem 0.5rem 1rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 -4px 15px var(--shadow-light);
+        border-radius: 0;
+        z-index: 50;
+        height: 70px;
+      }
+
+      .user {
+        display: none;
+      }
+
+      nav ul {
+        display: flex;
+        gap: 1rem;
+        width: auto;
+      }
+
+      nav ul li {
+        margin-bottom: 0;
+      }
+
+      nav ul li a {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.5rem;
+        flex-direction: column;
+        gap: 0.25rem;
+        color: var(--text-muted);
+      }
+
+      nav ul li a img {
+        width: 24px;
+        height: 24px;
+        filter: none;
+      }
+
+      nav ul li a:hover {
+        background: transparent;
+        color: var(--accent-primary);
+      }
+
+      nav ul li button {
+        display: none;
+      }
+
+      .container {
+        padding-bottom: 90px;
+      }
+
+      .allenamento {
+        padding: 1.5rem 1rem 2rem;
+      }
+
+      .workout-section {
+        padding: 1rem 1rem 1.5rem;
+      }
+
+      .exercise-title {
+        font-size: 1.25rem;
+      }
+
+      .exercise-info p {
+        font-size: 0.9rem;
+      }
+
+      .video-container {
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      .timer-display {
+        font-size: 2rem;
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--accent-light);
+      border-radius: 50%;
+      border-top-color: var(--accent-primary);
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="container">
+    <div aria-label="Menu di navigazione" class="menu">
+      <div class="user" style="cursor:pointer; text-align: center;">
+        <a aria-label="Informazioni utente" href="#user-info">
+          <img alt="Icona utente silhouette di una persona con sfondo azzurro" height="80" src="https://storage.googleapis.com/a1aa/image/c879a962-6151-49d7-ca4c-b31b76f0d1ae.jpg" width="80"/>
+        </a>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a aria-label="Home" href="..\..\utente\app utente\app.html">
+              <img alt="Icona casa blu" height="30" src="https://img.icons8.com/80EAFF/fluency-systems-filled/48/home.png" width="30">
+              Home
+            </a>
+          </li>
+          <li>
+
+          <li style="text-align: center;">
+            <button aria-label="Cambia tema" type="button" onclick="toggleTheme()">
+              <span class="sr-only">Cambia tema</span>
+              <img alt="Icona luna/sole per cambio tema" height="40" src="https://storage.googleapis.com/a1aa/image/5b4d5d62-2deb-4be7-34a8-136dfcc7ac5a.jpg" width="40" id="theme-icon"/>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div aria-atomic="true" aria-live="polite" class="allenamento" role="main">
+      <h1>🏋️‍♂️ Palestra Virtuale</h1>
+      <p>Allenamento sincronizzato con video sequenziali</p>
+      
+      <div aria-label="Contatore esercizi" class="exercise-counter" id="counter">
+        Esercizio 1 di <span id="total">0</span>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="stats-container" id="stats-container">
+        <div class="stat-item">
+          <div class="stat-value" id="total-time">00:00</div>
+          <div class="stat-label">Tempo Totale</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="calories">0</div>
+          <div class="stat-label">Cal. Bruciate</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="completed-exercises">0</div>
+          <div class="stat-label">Completati</div>
+        </div>
+      </div>
+      
+      <!-- Timer Display -->
+      <div id="timer-section" class="hidden">
+        <div class="timer-label" id="timer-label">Preparati per l'esercizio</div>
+        <div class="timer-display" id="timer-display">10</div>
+      </div>
+
+      <div aria-label="Contenitore esercizi" id="workout-container" tabindex="0">
+        <div class="no-exercises">
+          <h2>Caricamento allenamento... <div class="loading"></div></h2>
+          <p>Sincronizzazione dei video in corso</p>
+        </div>
+      </div>
+      
+      <div aria-label="Barra di progresso allenamento" aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="progress-bar" role="progressbar">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <div aria-label="Controlli allenamento" class="workout-section">
+    <div class="controls">
+      <button aria-label="Riavvolgi allenamento" class="btn btn-primary" onclick="previousExercise()" id="prev-btn">
+        <img alt="Icona rewind" height="32" src="https://img.icons8.com/sf-black-filled/64/rewind.png" width="32">
+      </button>
+      <button aria-label="Play/Pausa allenamento" class="btn btn-secondary" onclick="toggleWorkout()" id="play-pause-btn">
+        <img alt="Icona play" height="32" src="https://img.icons8.com/sf-black-filled/64/play.png" width="32" id="play-pause-icon"/>
+      </button>
+      <button aria-label="Prossimo esercizio" class="btn btn-primary" onclick="nextExercise()" id="next-btn">
+        <img alt="Icona fast-forward" height="32" src="https://img.icons8.com/sf-black-filled/64/fast-forward.png" width="32"/>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIGURAZIONE TIMER E RIPETIZIONI =====
+    
+    // Timer per i recuperi tra esercizi (in secondi)
+    const RECOVERY_TIME = 10; // 10 secondi di recupero tra un esercizio e l'altro
+    
+    // Timer di preparazione iniziale (in secondi)
+    const PREPARATION_TIME = 5; // 5 secondi prima di iniziare l'allenamento
+    
+    // RIPETIZIONI PER OGNI ESERCIZIO (da implementare nell'interfaccia)
+    const EXERCISE_REPETITIONS = {
+      "Jumping Jacks": 20,    // 20 ripetizioni
+      "Flessioni": 12,        // 12 ripetizioni
+      "Addominali": 15,       // 15 ripetizioni
+      "Squat": 15,            // 15 ripetizioni
+      "Plank": 1,             // 1 tenuta (durata in secondi)
+      "Burpees": 8            // 8 ripetizioni
+    };
+    
+    // Database degli esercizi con video ID YouTube
+    const esercizi = {
+      "Jumping Jacks": {
+        titolo: "Jumping Jacks",
+        tipo: "Corpo Libero",
+        categoria: "Riscaldamento",
+        video: "FnqdxybhJ7Y",
+        descrizione: "Esercizio cardiovascolare per il riscaldamento",
+        // durata rimossa - ora si usano le ripetizioni
+        calorie: 5,
+        // Le ripetizioni sono definite in EXERCISE_REPETITIONS
+        unita: "ripetizioni" // Unità di misura per questo esercizio
+      },
+      "Flessioni": {
+        titolo: "Flessioni",
+        tipo: "Corpo Libero",
+        categoria: "Forza",
+        video: "_yUXa9k_LoQ",
+        descrizione: "Rinforzo muscoli pettorali e braccia",
+        calorie: 8,
+        unita: "ripetizioni"
+      },
+      "Addominali": {
+        titolo: "Addominali",
+        tipo: "Corpo Libero",
+        categoria: "Core",
+        video: "_yUXa9k_LoQ",
+        descrizione: "Rafforzamento del core e addominali",
+        calorie: 6,
+        unita: "ripetizioni"
+      },
+      "Squat": {
+        titolo: "Squat",
+        tipo: "Corpo Libero",
+        categoria: "Forza",
+        video: "_yUXa9k_LoQ",
+        descrizione: "Esercizio per gambe e glutei",
+        calorie: 7,
+        unita: "ripetizioni"
+      },
+      "Plank": {
+        titolo: "Plank",
+        tipo: "Corpo Libero",
+        categoria: "Core",
+        video: "yeKv5oX_6GE",
+        descrizione: "Esercizio isometrico per il core",
+        calorie: 4,
+        unita: "secondi" // Plank è basato su tempo, non ripetizioni
+      },
+      "Burpees": {
+        titolo: "Burpees",
+        tipo: "Corpo Libero",
+        categoria: "Cardio",
+        video: "qLBImHhCXSw",
+        descrizione: "Esercizio completo per tutto il corpo",
+        calorie: 12,
+        unita: "ripetizioni"
+      }
+    };
+
+    // Variabili globali
+    let currentExercise = 0;
+    let exercises = [];
+    let workoutStarted = false;
+    let workoutPaused = false;
+    let currentTimer = null;
+    let isInRecovery = false;
+    let workoutCompleted = false;
+    let workoutStartTime = null;
+    let totalWorkoutTime = 0;
+    let totalCalories = 0;
+    let completedExercisesCount = 0;
+    let statsInterval = null;
+
+    // Funzioni per le notifiche
+    function showNotification(message, type = 'info', duration = 3000) {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideInRight 0.3s ease-out reverse';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, duration);
+    }
+
+    // Funzioni per il tema
+    function toggleTheme() {
+      const body = document.body;
+      const themeIcon = document.getElementById('theme-icon');
+      const currentTheme = body.getAttribute('data-theme');
+      
+      if (currentTheme === 'light') {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.src = 'https://img.icons8.com/sf-black-filled/64/sun.png';
+        themeIcon.alt = 'Icona sole per tema chiaro';
+        showNotification('Tema scuro attivato', 'success');
+      } else {
+        body.setAttribute('data-theme', 'light');
+        themeIcon.src = 'https://storage.googleapis.com/a1aa/image/5b4d5d62-2deb-4be7-34a8-136dfcc7ac5a.jpg';
+        themeIcon.alt = 'Icona luna per tema scuro';
+        showNotification('Tema chiaro attivato', 'success');
+      }
+    }
+
+    // Funzioni per il timer
+    function startTimer(seconds, label, callback) {
+      const timerSection = document.getElementById('timer-section');
+      const timerDisplay = document.getElementById('timer-display');
+      const timerLabel = document.getElementById('timer-label');
+      
+      timerSection.classList.remove('hidden');
+      timerLabel.textContent = label;
+      timerDisplay.textContent = seconds;
+      
+      let timeLeft = seconds;
+      
+      currentTimer = setInterval(() => {
+        if (timeLeft > 0) {
+          timerDisplay.textContent = timeLeft;
+          
+          if (timeLeft <= 3) {
+            timerDisplay.style.color = 'var(--warning-color)';
+          } else {
+            timerDisplay.style.color = 'var(--accent-primary)';
+          }
+          
+          timeLeft--;
+        } else {
+          clearInterval(currentTimer);
+          timerSection.classList.add('hidden');
+          timerDisplay.style.color = 'var(--accent-primary)';
+          if (callback) callback();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (currentTimer) {
+        clearInterval(currentTimer);
+        currentTimer = null;
+      }
+      const timerSection = document.getElementById('timer-section');
+      const timerDisplay = document.getElementById('timer-display');
+      timerSection.classList.add('hidden');
+      timerDisplay.style.color = 'var(--accent-primary)';
+    }
+
+    // Funzioni per le statistiche
+    function updateStats() {
+      const totalTimeElement = document.getElementById('total-time');
+      const caloriesElement = document.getElementById('calories');
+      const completedElement = document.getElementById('completed-exercises');
+      
+      if (workoutStartTime) {
+        const currentTime = Date.now();
+        totalWorkoutTime = Math.floor((currentTime - workoutStartTime) / 1000);
+        
+        const minutes = Math.floor(totalWorkoutTime / 60);
+        const seconds = totalWorkoutTime % 60;
+        totalTimeElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+      
+      caloriesElement.textContent = totalCalories;
+      completedElement.textContent = completedExercisesCount;
+    }
+
+    function startStatsTracking() {
+      if (!statsInterval) {
+        statsInterval = setInterval(updateStats, 1000);
+      }
+    }
+
+    function stopStatsTracking() {
+      if (statsInterval) {
+        clearInterval(statsInterval);
+        statsInterval = null;
+      }
+    }
+
+    // Funzione per caricare i dati dalla URL
+    function loadWorkoutData() {
+      const params = new URLSearchParams(window.location.search);
+      const dataParam = params.get('data');
+
+      if (dataParam) {
+        try {
+          const data = JSON.parse(decodeURIComponent(dataParam));
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(data.html, 'text/html');
+
+          // Estrai i titoli degli esercizi dagli h2
+          const titoli = Array.from(doc.querySelectorAll('h2')).map(h2 => h2.textContent.trim());
+
+          // Filtra solo gli esercizi che esistono nel database
+          exercises = titoli.filter(titolo => esercizi[titolo]).map(titolo => ({
+            nome: titolo,
+            ...esercizi[titolo]
+          }));
+
+          if (exercises.length === 0) {
+            showNotification('Nessun esercizio valido trovato nei dati', 'warning');
+          }
+
+          renderWorkout();
+        } catch (error) {
+          console.error('Errore nel parsing dei dati:', error);
+          showError('Errore nel caricamento dei dati dell\'allenamento');
+        }
+      } else {
+        // Fallback: usa esercizi di default per demo
+        exercises = Object.keys(esercizi).slice(0, 4).map(nome => ({
+          nome: nome,
+          ...esercizi[nome]
+        }));
+        showNotification('Caricato allenamento demo', 'info');
+        renderWorkout();
+      }
+    }
+
+    // Funzione per renderizzare l'allenamento
+    function renderWorkout() {
+      const container = document.getElementById('workout-container');
+      const totalElement = document.getElementById('total');
+
+      if (exercises.length === 0) {
+        container.innerHTML = `
+          <div class="no-exercises" role="alert" aria-live="assertive">
+            <h2>Nessun esercizio trovato</h2>
+            <p>Assicurati di aver generato il link correttamente da esercizioword.html</p>
+          </div>
+        `;
+        return;
+      }
+
+      totalElement.textContent = exercises.length;
+
+      let html = '';
+      exercises.forEach((exercise, index) => {
+        // Ottieni le ripetizioni per questo esercizio
+        const repetitions = EXERCISE_REPETITIONS[exercise.nome] || 10; // default 10 se non trovato
+        const unit = exercise.unita || "ripetizioni";
+        
+        html += `
+          <div class="workout-section ${index !== 0 ? 'hidden' : 'active'}" id="exercise-${index}" tabindex="0" aria-label="Esercizio ${index + 1}: ${exercise.nome}">
+            <div class="exercise-item">
+              <div class="exercise-content">
+                <h2 class="exercise-title">${exercise.nome}</h2>
+                <div class="exercise-info">
+                  <p><strong>Tipo:</strong> ${exercise.tipo}</p>
+                  <p><strong>Categoria:</strong> ${exercise.categoria}</p>
+                  <p><strong>Obiettivo:</strong> ${repetitions} ${unit}</p>
+                  <p><strong>Calorie:</strong> ~${exercise.calorie} cal</p>
+                  <p><strong>Descrizione:</strong> ${exercise.descrizione}</p>
+                </div>
+              </div>
+              <div class="video-container">
+                <iframe 
+                  id="video-${index}"
+                  src="https://www.youtube.com/embed/${exercise.video}?enablejsapi=1&controls=1&rel=0&loop=1&playlist=${exercise.video}&autoplay=0&mute=1&modestbranding=1&iv_load_policy=3"
+                  title="${exercise.nome} - Video allenamento"
+                  allowfullscreen
+                  loading="lazy"
+                  aria-describedby="desc-${index}"
+                ></iframe>
+                ${!workoutStarted ? '<div class="video-overlay">Premi Play per iniziare</div>' : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      updateProgress();
+      updateControls();
+      updateStats();
+    }
+
+    // Funzione per mostrare la schermata di completamento
+    function showCompletionScreen() {
+      const container = document.getElementById('workout-container');
+      const finalTime = Math.floor(totalWorkoutTime / 60);
+      const finalSeconds = totalWorkoutTime % 60;
+      
+      container.innerHTML = `
+        <div class="completion-message">
+          <h2>🎉 ALLENAMENTO TERMINATO! 🎉</h2>
+          <p>Complimenti! Hai completato tutti gli esercizi con successo!</p>
+          <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 0.5rem;">
+              <div style="font-size: 1.5rem; font-weight: 800;">${finalTime}:${finalSeconds.toString().padStart(2, '0')}</div>
+              <div style="font-size: 0.9rem; opacity: 0.8;">Tempo Totale</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 0.5rem;">
+              <div style="font-size: 1.5rem; font-weight: 800;">${totalCalories}</div>
+              <div style="font-size: 0.9rem; opacity: 0.8;">Calorie Bruciate</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); padding: 1rem; border-radius: 0.5rem;">
+              <div style="font-size: 1.5rem; font-weight: 800;">${completedExercisesCount}</div>
+              <div style="font-size: 0.9rem; opacity: 0.8;">Esercizi Completati</div>
+            </div>
+          </div>
+          <p style="margin-top: 1.5rem; font-size: 1rem; opacity: 0.8;">Ottimo lavoro! Ricordati di idratarti e fare stretching.</p>
+        </div>
+      `;
+      workoutCompleted = true;
+      stopStatsTracking();
+      updateControls();
+      showNotification('Allenamento completato! 🎉', 'success', 5000);
+    }
+
+    // Funzione per mostrare errori
+    function showError(message) {
+      const container = document.getElementById('workout-container');
+      container.innerHTML = `
+        <div class="no-exercises" role="alert" aria-live="assertive">
+          <h2>⚠️ Errore</h2>
+          <p>${message}</p>
+        </div>
+      `;
+      showNotification(message, 'error');
+    }
+
+    // Funzione per avviare/mettere in pausa l'allenamento
+    function toggleWorkout() {
+      if (!workoutStarted && !workoutCompleted) {
+        startWorkout();
+      } else if (workoutStarted && !workoutCompleted) {
+        if (workoutPaused) {
+          resumeWorkout();
+        } else {
+          pauseWorkout();
+        }
+      } else if (workoutCompleted) {
+        resetWorkout();
+      }
+    }
+
+    function startWorkout() {
+      if (exercises.length === 0) {
+        showNotification('Nessun esercizio disponibile', 'warning');
+        return;
+      }
+      
+      workoutStarted = true;
+      workoutPaused = false;
+      currentExercise = 0;
+      workoutStartTime = Date.now();
+      totalCalories = 0;
+      completedExercisesCount = 0;
+      
+      // Rimuovi overlay dai video
+      document.querySelectorAll('.video-overlay').forEach(overlay => overlay.remove());
+      
+      showCurrentExercise();
+      updateProgress();
+      updateControls();
+      startStatsTracking();
+      
+      // Usa la variabile PREPARATION_TIME per il timer di preparazione
+      startTimer(PREPARATION_TIME, "Inizia l'allenamento in...", () => {
+        const exercise = exercises[currentExercise];
+        const reps = EXERCISE_REPETITIONS[exercise.nome] || 10;
+        const unit = exercise.unita || "ripetizioni";
+        showNotification(`Inizia: ${exercise.nome} - ${reps} ${unit}`, 'success');
+        
+        // NOTA: Qui andrebbe implementato il sistema di ripetizioni
+        // Per ora manteniamo il sistema basato su tempo per compatibilità
+        startExerciseWaitingMode();
+      });
+    }
+
+    // ===== MODALITÀ BASATA SU RIPETIZIONI (da implementare) =====
+    
+    function startExerciseWaitingMode() {
+      // QUESTA FUNZIONE SOSTITUIRÀ startExerciseTimer()
+      // Per ora mostra un messaggio e aspetta che l'utente completi manualmente
+      
+      if (workoutPaused || workoutCompleted) return;
+      
+      const exercise = exercises[currentExercise];
+      const reps = EXERCISE_REPETITIONS[exercise.nome] || 10;
+      const unit = exercise.unita || "ripetizioni";
+      
+      // Mostra timer solo se l'esercizio è Plank, altrimenti mostra solo ripetizioni
+      if (exercise.nome === "Plank") {
+        startTimer(reps, `${exercise.nome} - ${reps} ${unit}`, () => {
+          completeCurrentExercise();
+        });
+      } else {
+        // Mostra ripetizioni senza timer
+        const timerSection = document.getElementById('timer-section');
+        const timerLabel = document.getElementById('timer-label');
+        const timerDisplay = document.getElementById('timer-display');
+        
+        timerSection.classList.remove('hidden');
+        timerLabel.textContent = `${exercise.nome} - Ripetizioni`;
+        timerDisplay.textContent = reps;
+        timerDisplay.style.color = 'var(--accent-primary)';
+      }
+    }
+    
+    function completeCurrentExercise() {
+      // Funzione chiamata quando un esercizio è completato
+      const exercise = exercises[currentExercise];
+      
+      // Aggiorna statistiche
+      totalCalories += exercise.calorie;
+      completedExercisesCount++;
+      updateStats();
+      
+      if (currentExercise < exercises.length - 1) {
+        showNotification(`${exercise.nome} completato! +${exercise.calorie} cal`, 'success');
+        nextExercise();
+      } else {
+        showNotification(`${exercise.nome} completato! +${exercise.calorie} cal`, 'success');
+        setTimeout(() => {
+          showCompletionScreen();
+          updateProgress();
+        }, 1000);
+      }
+    }
+
+    function pauseWorkout() {
+      workoutPaused = true;
+      stopTimer();
+      stopStatsTracking();
+      updateControls();
+      showNotification('Allenamento in pausa', 'warning');
+    }
+
+    function resumeWorkout() {
+      workoutPaused = false;
+      startStatsTracking();
+      updateControls();
+      showNotification('Allenamento ripreso', 'success');
+      
+      // Riprendi il timer se necessario
+      if (!isInRecovery && !workoutCompleted) {
+        startExerciseWaitingMode(); // Usa la nuova funzione
+      }
+    }
+
+    function resetWorkout() {
+      workoutStarted = false;
+      workoutPaused = false;
+      workoutCompleted = false;
+      currentExercise = 0;
+      isInRecovery = false;
+      workoutStartTime = null;
+      totalWorkoutTime = 0;
+      totalCalories = 0;
+      completedExercisesCount = 0;
+      
+      stopTimer();
+      stopStatsTracking();
+      renderWorkout();
+      updateProgress();
+      updateControls();
+      updateStats();
+      showNotification('Allenamento reimpostato', 'info');
+    }
+
+    // Funzioni per navigare tra esercizi
+    function nextExercise() {
+      if (workoutPaused || !workoutStarted || workoutCompleted) return;
+      
+      if (currentExercise < exercises.length - 1) {
+        currentExercise++;
+        showCurrentExercise();
+        updateProgress();
+        
+        // Avvia timer di recupero usando la variabile RECOVERY_TIME
+        isInRecovery = true;
+        const nextExerciseName = exercises[currentExercise].nome;
+        const nextReps = EXERCISE_REPETITIONS[nextExerciseName] || 10;
+        const nextUnit = exercises.find(e => e.nome === nextExerciseName)?.unita || "ripetizioni";
+        
+        startTimer(RECOVERY_TIME, `Recupero - Prossimo: ${nextExerciseName} (${nextReps} ${nextUnit})`, () => {
+          isInRecovery = false;
+          if (!workoutPaused && !workoutCompleted) {
+            startExerciseWaitingMode(); // Usa la nuova funzione
+          }
+        });
+      }
+    }
+
+    function previousExercise() {
+      if (workoutPaused || !workoutStarted || workoutCompleted) return;
+      
+      if (currentExercise > 0) {
+        stopTimer();
+        isInRecovery = false;
+        currentExercise--;
+        
+        // Sottrai le statistiche dell'esercizio precedente
+        if (completedExercisesCount > 0) {
+          const exercise = exercises[currentExercise + 1];
+          totalCalories = Math.max(0, totalCalories - exercise.calorie);
+          completedExercisesCount = Math.max(0, completedExercisesCount - 1);
+        }
+        
+        showCurrentExercise();
+        updateProgress();
+        updateStats();
+        showNotification(`Tornato a: ${exercises[currentExercise].nome}`, 'info');
+        
+        // Avvia l'esercizio usando la nuova modalità
+        startExerciseWaitingMode();
+      }
+    }
+
+    // Funzione per mostrare l'esercizio corrente
+    function showCurrentExercise() {
+      // Rimuovi classe active da tutti gli esercizi
+      exercises.forEach((_, index) => {
+        const exerciseElement = document.getElementById(`exercise-${index}`);
+        if (exerciseElement) {
+          exerciseElement.classList.add('hidden');
+          exerciseElement.classList.remove('active');
+        }
+      });
+      
+      // Mostra solo l'esercizio corrente
+      const currentExerciseElement = document.getElementById(`exercise-${currentExercise}`);
+      if (currentExerciseElement) {
+        currentExerciseElement.classList.remove('hidden');
+        currentExerciseElement.classList.add('active');
+        currentExerciseElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Funzione per aggiornare la progress bar
+    function updateProgress() {
+      const progress = document.getElementById('progress');
+      const counter = document.getElementById('counter');
+
+      if (exercises.length > 0) {
+        let percentage;
+        if (workoutCompleted) {
+          percentage = 100;
+        } else {
+          percentage = ((currentExercise + 1) / exercises.length) * 100;
+        }
+        
+        progress.style.width = percentage + '%';
+        progress.setAttribute('aria-valuenow', percentage.toFixed(0));
+        
+        if (workoutCompleted) {
+          counter.innerHTML = `Allenamento completato! 🎉`;
+        } else {
+          counter.innerHTML = `Esercizio ${currentExercise + 1} di <span id="total">${exercises.length}</span>`;
+        }
+      } else {
+        progress.style.width = '0%';
+        progress.setAttribute('aria-valuenow', '0');
+        counter.textContent = 'Nessun esercizio';
+      }
+    }
+
+    // Funzione per aggiornare i controlli
+    function updateControls() {
+      const playPauseBtn = document.getElementById('play-pause-btn');
+      const playPauseIcon = document.getElementById('play-pause-icon');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      
+      // Aggiorna icona play/pause
+      if (!workoutStarted) {
+        playPauseIcon.src = 'https://img.icons8.com/sf-black-filled/64/play.png';
+        playPauseIcon.alt = 'Icona play';
+        playPauseBtn.setAttribute('aria-label', 'Inizia allenamento');
+      } else if (workoutCompleted) {
+        playPauseIcon.src = 'https://img.icons8.com/sf-black-filled/64/restart.png';
+        playPauseIcon.alt = 'Icona restart';
+        playPauseBtn.setAttribute('aria-label', 'Ricomincia allenamento');
+      } else if (workoutPaused) {
+        playPauseIcon.src = 'https://img.icons8.com/sf-black-filled/64/play.png';
+        playPauseIcon.alt = 'Icona play';
+        playPauseBtn.setAttribute('aria-label', 'Riprendi allenamento');
+      } else {
+        playPauseIcon.src = 'https://img.icons8.com/sf-black-filled/64/pause.png';
+        playPauseIcon.alt = 'Icona pause';
+        playPauseBtn.setAttribute('aria-label', 'Pausa allenamento');
+      }
+      
+      // Disabilita/abilita pulsanti
+      const canNavigate = workoutStarted && !workoutPaused && !workoutCompleted && !isInRecovery;
+      
+      prevBtn.disabled = !canNavigate || currentExercise === 0;
+      nextBtn.disabled = !canNavigate || currentExercise === exercises.length - 1;
+      
+      // Aggiorna stili per pulsanti disabilitati
+      prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+      prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
+      
+      nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+      nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
+    }
+
+    // Event listeners per navigazione con tastiera
+    document.addEventListener('keydown', function (event) {
+      if (workoutStarted && !workoutPaused && !workoutCompleted) {
+        if (event.key === 'ArrowRight' || event.key === ' ') {
+          event.preventDefault();
+          if (!nextBtn.disabled) {
+            nextExercise();
+          }
+        } else if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          if (!prevBtn.disabled) {
+            previousExercise();
+          }
+        } else if (event.key === 'p' || event.key === 'P') {
+          event.preventDefault();
+          toggleWorkout();
+        }
+      } else if (!workoutStarted && (event.key === ' ' || event.key === 'Enter')) {
+        event.preventDefault();
+        toggleWorkout();
+      }
+    });
+
+    // Gestione della visibilità della pagina (pausa automatica quando si cambia tab)
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden && workoutStarted && !workoutPaused && !workoutCompleted) {
+        pauseWorkout();
+        showNotification('Allenamento messo in pausa (tab nascosto)', 'warning');
+      }
+    });
+
+    // Inizializza l'app quando la pagina è caricata
+    document.addEventListener('DOMContentLoaded', function () {
+      loadWorkoutData();
+      
+      // Imposta tema iniziale basato su preferenze sistema
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-icon').src = 'https://img.icons8.com/sf-black-filled/64/sun.png';
+      }
+      
+      // Mostra messaggio di benvenuto
+      setTimeout(() => {
+        showNotification('Benvenuto nella Palestra Virtuale! 💪', 'success');
+      }, 1000);
+    });
+
+    // Gestione cambio tema automatico
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (e.matches) {
+          document.body.setAttribute('data-theme', 'dark');
+          document.getElementById('theme-icon').src = 'https://img.icons8.com/sf-black-filled/64/sun.png';
+        } else {
+          document.body.setAttribute('data-theme', 'light');
+          document.getElementById('theme-icon').src = 'https://storage.googleapis.com/a1aa/image/5b4d5d62-2deb-4be7-34a8-136dfcc7ac5a.jpg';
+        }
+      });
+    }
+
+    // Gestione dello swipe su mobile per navigazione
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', function(event) {
+      touchStartX = event.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', function(event) {
+      touchEndX = event.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const swipeDistance = touchEndX - touchStartX;
+      
+      if (workoutStarted && !workoutPaused && !workoutCompleted && !isInRecovery) {
+        if (swipeDistance > swipeThreshold && !prevBtn.disabled) {
+          // Swipe destro - esercizio precedente
+          previousExercise();
+        } else if (swipeDistance < -swipeThreshold && !nextBtn.disabled) {
+          // Swipe sinistro - esercizio successivo
+          nextExercise();
+        }
+      }
+    }
+
+    // Prevenzione del refresh accidentale durante l'allenamento
+    window.addEventListener('beforeunload', function(event) {
+      if (workoutStarted && !workoutCompleted) {
+        event.preventDefault();
+        event.returnValue = 'Sei sicuro di voler lasciare la pagina? L\'allenamento in corso verrà perso.';
+        return event.returnValue;
+      }
+    });
+  </script>
+</body>
+</html>
