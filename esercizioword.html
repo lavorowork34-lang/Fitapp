@@ -190,7 +190,7 @@
       const videos = titoli.map(t => esercizi[t]?.video).filter(Boolean);
       const data = encodeURIComponent(JSON.stringify({ html, videos }));
       document.getElementById('link-palestra-output').innerHTML =
-        `<a href="allenamento%20user/palestra.html?data=${data}" target="_blank">Apri Palestra (video sincronizzati)</a>`;
+        `<a href="palestra.html?data=${data}" target="_blank">Apri Palestra (video sincronizzati)</a>`;
     }
 
     function aggiungiCella(btn) {
@@ -258,3 +258,4 @@
   </script>
 </body>
 </html>
+
