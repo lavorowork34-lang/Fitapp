@@ -1,0 +1,71 @@
+Relazione Lavorativa
+Titolo del progetto: Area Gestore - App Fitness
+Nome del responsabile: [Tuo Nome]
+Data: [Data odierna]
+
+1. Introduzione
+La presente relazione descrive il lavoro svolto per la realizzazione dell’Area Gestore dell’app Fitness, una piattaforma web dedicata alla gestione degli utenti registrati, con funzionalità di autenticazione, visualizzazione, modifica e esportazione dati.
+
+2. Obiettivi del progetto
+Creare un’interfaccia sicura per l’accesso da parte dell'amministratore.
+
+Consentire la visualizzazione e la gestione dei dati degli utenti.
+
+Fornire strumenti di ricerca, aggiornamento dei link di risorse (PDF e VIDEO) e la possibilità di esportare i dati in formato Excel.
+
+Garantire un’esperienza utente intuitiva e una protezione completa da potenziali vulnerabilità.
+
+3. Tecnologie utilizzate
+Frontend: HTML5, CSS3, JavaScript
+
+Backend/Database: Firebase Authentication e Firestore
+
+Librerie esterne: SheetJS (per esportazione dati in Excel)
+
+Sicurezza: Firebase Rules, validazioni lato client, misure anti-XSS e anti-DDoS
+
+Hosting: Firebase Hosting (opzionale)
+
+4. Descrizione delle funzionalità implementate
+4.1 Autenticazione
+Login sicuro tramite Firebase Authentication, con verifica del ruolo utente ("admin"). Solo gli amministratori possono accedere all’area gestore.
+
+4.2 Gestione utenti
+Recupero e gestione dinamica dei dati utente (nome, email, età, BMI, link PDF/VIDEO), letti in tempo reale dal database Firestore.
+
+4.3 Ricerca e filtro
+Sistema di ricerca dinamica per filtrare utenti per nome o cognome, migliorando la gestione dei dati.
+
+4.4 Modifica link
+Possibilità di modificare i link a risorse PDF e video associati agli utenti. Le modifiche vengono salvate in tempo reale nel database.
+
+4.5 Esportazione dati
+Esportazione dei dati utenti in formato Excel (.xlsx), anche per risultati filtrati, tramite la libreria SheetJS.
+
+5. Sicurezza: problemi affrontati e soluzioni
+Durante lo sviluppo sono stati considerati e testati vari scenari di vulnerabilità. Ecco una sintesi dei principali problemi affrontati e delle soluzioni adottate:
+
+5.1 Attacchi DDoS (Denial of Service)
+Test effettuati: sono state simulate richieste multiple e rapide per valutare la tenuta della pagina.
+
+Soluzione: è stato implementato un sistema di throttling e rate-limiting tramite Firebase e Cloud Functions, oltre a limiti sulle query e ricarichi automatici gestiti tramite codice lato client.
+
+5.2 Attacchi XSS (Cross-Site Scripting)
+Test effettuati: sono stati inseriti script malevoli nei campi input per tentare di compromettere la pagina.
+
+Soluzione: ogni campo viene sanitizzato con funzioni di escaping. I dati inseriti vengono filtrati lato client e lato Firestore per evitare qualsiasi esecuzione di codice JavaScript.
+
+5.3 Autenticazione e autorizzazione forzata
+Test effettuati: sono stati tentati accessi diretti a pagine riservate e manipolazioni dell’oggetto utente nel client.
+
+Soluzione: l’accesso all’area gestore è bloccato sia lato client (verifica ruolo) che lato server (regole Firebase). Solo utenti con role: "admin" possono visualizzare e modificare dati.
+
+5.4 Altri test e protezioni
+CSRF: Le chiamate Firebase sono protette da token generati con autenticazione, quindi non vulnerabili a richieste cross-site.
+
+SQL Injection: Non applicabile, in quanto si usa Firestore (NoSQL) che non interpreta stringhe come query SQL.
+
+Manomissione lato client: I dati vengono salvati tramite interfacce controllate. Tutte le scritture sul database sono vincolate da regole precise.
+
+Risultato:
+L’app è stata testata contro le principali vulnerabilità note (DDoS, XSS, CSRF, manomissione ruoli) ed è risultata sicura.

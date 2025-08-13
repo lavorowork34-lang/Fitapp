@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Area Gestore - App Fitness</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="security.js"></script>
+  <!-- SheetJS per export Excel -->
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<h1>Area Gestore</h1>
+
+<button id="toggleThemeBtn" aria-label="Toggle light/dark mode">Light Mode</button>
+  <div id="loginSection">
+    <div id="logoContainer">
+      <img alt="Axes app icon with dark background and subtle dotted pattern" src="https://storage.googleapis.com/a1aa/image/bda36722-51ff-4e38-6283-4761a174fdd7.jpg" />
+    </div>
+    <h2>Benvenuto Gianlorenzo Malvasi</h2>
+    <p class="subtitle">Area gestione pazienti</p>
+    <div id="emailWrapper">
+      <input type="email" id="email" placeholder="enter your email address..." autocomplete="email" />
+      <img alt="Blue glowing email icon inside input on right side" id="emailIcon" src="https://storage.googleapis.com/a1aa/image/318ad7d2-caad-4dd2-212e-1686e9f55fe5.jpg" />
+    </div>
+    <input type="password" id="password" placeholder="Password" />
+    <center><button onclick="login()">Accedi</button></center>
+    <p id="loginStatus"></p>
+    <p id="extraText">Personali trainer biologo nutrizionista e massaggiatore sportivo</p>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('toggleThemeBtn');
+    const body = document.body;
+
+    function updateToggleButton() {
+      if (body.classList.contains('light')) {
+        toggleBtn.textContent = 'Dark Mode';
+        toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+      } else {
+        toggleBtn.textContent = 'Light Mode';
+        toggleBtn.setAttribute('aria-label', 'Switch to light mode');
+      }
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('light');
+      updateToggleButton();
+    });
+
+    updateToggleButton();
+
+  </script>
+
+  <div id="listaUtenti" style="display:none;">
+    <h2>Lista Pazienti Registrati</h2>
+
+    <!-- Campo ricerca -->
+    <input type="text" id="searchInput" placeholder="Cerca per nome o cognome" oninput="filterUsers()" style="margin-bottom: 1em; width: 100%; padding: 0.5em;" />
+    <!-- Pulsante esporta Excel -->
+    <button onclick="exportToExcel()" style="margin-bottom: 1em;">Esporta dati in Excel</button>
+
+    <div id="usersContainer">
+      <p>Caricamento utenti...</p>
+    </div>
+  </div>
+
+  <!--Parte del login e gestione utenti-->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCAD8IYgzEyIs7a62p2iCYHBs_VKESZjnI",
+      authDomain: "app-fitness-b7c26.firebaseapp.com",
+      projectId: "app-fitness-b7c26",
+      storageBucket: "app-fitness-b7c26.firebasestorage.app",
+      messagingSenderId: "150986445380",
+      appId: "1:150986445380:web:d54b2ce3aa12f0c1106211",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let allUsersData = [];
+
+    function login() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const status = document.getElementById("loginStatus");
+
+      status.textContent = "";
+      status.className = "";
+
+      if (!email || !password) {
+        status.textContent = "Inserisci email e password.";
+        status.className = "error";
+        return;
+      }
+
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then((cred) => {
+          const uid = cred.user.uid;
+          return db.collection("admins").doc(uid).get();
+        })
+        .then((doc) => {
+          if (doc.exists && doc.data().role === "admin") {
+            status.textContent = "Accesso effettuato. Benvenuto!";
+            status.className = "success";
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("listaUtenti").style.display = "block";
+            loadUsers();
+          } else {
+            status.textContent = "Accesso negato: non sei un amministratore valido.";
+            status.className = "error";
+            auth.signOut();
+          }
+        })
+        .catch((error) => {
+          status.textContent = `Errore di accesso: ${error.message}`;
+          status.className = "error";
+        });
+    }
+
+    function loadUsers() {
+      const container = document.getElementById("usersContainer");
+      container.innerHTML = '<p>Caricamento utenti...</p>';
+
+      db.collection("Users")
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            container.innerHTML = "<p>Nessun utente trovato.</p>";
+            allUsersData = [];
+            return;
+          }
+
+          allUsersData = [];
+          container.innerHTML = "";
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const userId = doc.id;
+
+            allUsersData.push({ userId, ...data });
+
+            const pdfLinks = Array.isArray(data.PDF)
+              ? data.PDF
+              : data.PDF
+                ? [data.PDF]
+                : [];
+            const videoLinks = Array.isArray(data.VIDEO)
+              ? data.VIDEO
+              : data.VIDEO
+                ? [data.VIDEO]
+                : [];
+            const palestraLinks = Array.isArray(data.palestra)
+              ? data.palestra
+              : data.palestra
+                ? [data.palestra]
+                : [];
+
+            const div = document.createElement("div");
+            div.classList.add("user-container");
+            div.setAttribute("data-nome", (data.nome || "").toLowerCase());
+            div.setAttribute("data-cognome", (data.cognome || "").toLowerCase());
+
+            div.innerHTML = `
+              <h3>${data.nome || "Utente"} ${data.cognome || ""}</h3>
+              <p><strong>Email:</strong> ${data.email || "N/D"}</p>
+              <p><strong>Età:</strong> ${data.età || "N/D"}</p>
+              <p><strong>Altezza:</strong> ${data.altezza || "N/D"} cm</p>
+              <p><strong>Peso:</strong> ${data.peso || "N/D"} kg</p>
+              <p><strong>BMI:</strong> ${data.BMI || "N/D"}</p>
+              <p><strong>FAT:</strong> ${data.FAT || "N/D"}</p>
+              <p><strong>Massa muscolare:</strong> ${data["Massa muscolare"] || "N/D"}</p>
+              <p><strong>RM:</strong> ${data.RM || "N/D"}</p>
+
+              <div><strong>PDF Link:</strong><br>
+                ${pdfLinks.length > 0
+                ? pdfLinks
+                  .map(
+                    (link, i) => `
+                          <div>
+                            <a href="${link}" target="_blank">${link}</a>
+                            <button onclick="removeLink('${userId}', 'PDF', ${i})">Rimuovi</button>
+                          </div>
+                        `
+                  )
+                  .join("")
+                : "Nessun PDF"
+              }
+              </div>
+              <div><strong>VIDEO Link:</strong><br>
+                ${videoLinks.length > 0
+                ? videoLinks
+                  .map(
+                    (link, i) => `
+                          <div>
+                            <a href="${link}" target="_blank">${link}</a>
+                            <button onclick="removeLink('${userId}', 'VIDEO', ${i})">Rimuovi</button>
+                          </div>
+                        `
+                  )
+                  .join("")
+                : "Nessun VIDEO"
+              }
+              </div>
+              <div><strong>Palestra:</strong><br>
+                ${palestraLinks.length > 0
+                ? palestraLinks
+                  .map(
+                    (link, i) => `
+                          <div>
+                            <a href="${link}" target="_blank">${link}</a>
+                            <button onclick="removeLink('${userId}', 'palestra', ${i})">Rimuovi</button>
+                          </div>
+                        `
+                  )
+                  .join("")
+                : "Nessuna palestra"
+              }
+              </div>
+
+              <hr>
+              <label for="pdf-${userId}">Nuovo PDF:</label>
+              <input type="url" id="pdf-${userId}" placeholder="URL del nuovo PDF" />
+              <label for="video-${userId}">Nuovo VIDEO:</label>
+              <input type="url" id="video-${userId}" placeholder="URL del nuovo VIDEO" />
+              <label for="palestra-${userId}">Piano alimentare</label>
+              <input type="text" id="palestra-${userId}" placeholder="URL piano sportivo digitale" />
+              <button onclick="updateLinks('${userId}')">Aggiungi Link</button>
+              <span id="status-${userId}" class="status-message"></span>
+            `;
+
+            container.appendChild(div);
+          });
+        })
+        .catch((error) => {
+          container.innerHTML = `<p class="error">Errore durante il caricamento degli utenti: ${error.message}</p>`;
+          console.error("Errore caricamento utenti:", error);
+        });
+    }
+
+    function filterUsers() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const container = document.getElementById("usersContainer");
+      const users = container.querySelectorAll(".user-container");
+
+      users.forEach(userDiv => {
+        const nome = userDiv.getAttribute("data-nome");
+        const cognome = userDiv.getAttribute("data-cognome");
+        if (nome.includes(searchTerm) || cognome.includes(searchTerm)) {
+          userDiv.style.display = "";
+        } else {
+          userDiv.style.display = "none";
+        }
+      });
+    }
+
+    function updateLinks(userId) {
+      const pdfInput = document.getElementById(`pdf-${userId}`);
+      const videoInput = document.getElementById(`video-${userId}`);
+      const palestraInput = document.getElementById(`palestra-${userId}`);
+      const status = document.getElementById(`status-${userId}`);
+      const pdfUrl = pdfInput.value.trim();
+      const videoUrl = videoInput.value.trim();
+      const palestraValue = palestraInput.value.trim();
+
+      status.textContent = "";
+      status.className = "status-message";
+
+      db.collection("Users")
+        .doc(userId)
+        .get()
+        .then(doc => {
+          if (!doc.exists) {
+            status.textContent = "Utente non trovato.";
+            status.className = "error";
+            return;
+          }
+          const data = doc.data();
+          let pdfLinks = Array.isArray(data.PDF) ? data.PDF : data.PDF ? [data.PDF] : [];
+          let videoLinks = Array.isArray(data.VIDEO) ? data.VIDEO : data.VIDEO ? [data.VIDEO] : [];
+          let palestraLinks = Array.isArray(data.palestra) ? data.palestra : data.palestra ? [data.palestra] : [];
+
+          if (pdfUrl) {
+            if (!pdfLinks.includes(pdfUrl)) {
+              pdfLinks.push(pdfUrl);
+            }
+          }
+          if (videoUrl) {
+            if (!videoLinks.includes(videoUrl)) {
+              videoLinks.push(videoUrl);
+            }
+          }
+          if (palestraValue) {
+            if (!palestraLinks.includes(palestraValue)) {
+              palestraLinks.push(palestraValue);
+            }
+          }
+
+          return db.collection("Users").doc(userId).update({
+            PDF: pdfLinks,
+            VIDEO: videoLinks,
+            palestra: palestraLinks,
+          });
+        })
+        .then(() => {
+          status.textContent = "Link aggiornati con successo!";
+          status.className = "success";
+          pdfInput.value = "";
+          videoInput.value = "";
+          palestraInput.value = "";
+          loadUsers();
+        })
+        .catch(error => {
+          status.textContent = `Errore aggiornamento: ${error.message}`;
+          status.className = "error";
+          console.error("Errore aggiornamento link:", error);
+        });
+    }
+
+    function removeLink(userId, type, index) {
+      const status = document.getElementById(`status-${userId}`);
+      status.textContent = "";
+      status.className = "status-message";
+
+      db.collection("Users")
+        .doc(userId)
+        .get()
+        .then(doc => {
+          if (!doc.exists) {
+            status.textContent = "Utente non trovato.";
+            status.className = "error";
+            return;
+          }
+          const data = doc.data();
+          let links = Array.isArray(data[type]) ? data[type] : data[type] ? [data[type]] : [];
+          if (index < 0 || index >= links.length) {
+            status.textContent = "Indice non valido.";
+            status.className = "error";
+            return;
+          }
+          links.splice(index, 1);
+          return db.collection("Users").doc(userId).update({
+            [type]: links,
+          });
+        })
+        .then(() => {
+          status.textContent = `${type} rimosso con successo!`;
+          status.className = "success";
+          loadUsers();
+        })
+        .catch(error => {
+          status.textContent = `Errore rimozione: ${error.message}`;
+          status.className = "error";
+          console.error("Errore rimozione link:", error);
+        });
+    }
+
+    // Funzione per esportare in Excel solo gli utenti visibili (filtrati)
+    function exportToExcel() {
+      const usersContainer = document.getElementById("usersContainer");
+      const visibleUsers = Array.from(usersContainer.querySelectorAll(".user-container")).filter(
+        div => div.style.display !== "none"
+      );
+
+      if (visibleUsers.length === 0) {
+        alert("Nessun utente da esportare.");
+        return;
+      }
+
+      // Estrazione dati da ogni utente visibile
+      const dataToExport = visibleUsers.map(div => {
+        const h3 = div.querySelector("h3");
+        const nomeCognome = h3 ? h3.textContent.trim() : "";
+        const emailP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("Email:"));
+        const etaP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("Età:"));
+        const altezzaP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("Altezza:"));
+        const pesoP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("Peso:"));
+        const bmiP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("BMI:"));
+        const fatP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("FAT:"));
+        const massaP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("Massa muscolare:"));
+        const rmP = Array.from(div.querySelectorAll("p")).find(p => p.textContent.startsWith("RM:"));
+
+        return {
+          Nome_Cognome: nomeCognome,
+          Email: emailP ? emailP.textContent.replace("Email:", "").trim() : "",
+          Età: etaP ? etaP.textContent.replace("Età:", "").trim() : "",
+          Altezza_cm: altezzaP ? altezzaP.textContent.replace("Altezza:", "").trim() : "",
+          Peso_kg: pesoP ? pesoP.textContent.replace("Peso:", "").trim() : "",
+          BMI: bmiP ? bmiP.textContent.replace("BMI:", "").trim() : "",
+          FAT: fatP ? fatP.textContent.replace("FAT:", "").trim() : "",
+          Massa_muscolare: massaP ? massaP.textContent.replace("Massa muscolare:", "").trim() : "",
+          RM: rmP ? rmP.textContent.replace("RM:", "").trim() : "",
+        };
+      });
+
+      /* Creazione workbook e foglio Excel */
+      const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Utenti");
+
+      /* Esporta file Excel */
+      XLSX.writeFile(workbook, "utenti_filtrati.xlsx");
+    }
+  </script>
+
+</body>
+
+</html>

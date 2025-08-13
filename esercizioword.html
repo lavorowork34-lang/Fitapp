@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editor Esercizi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0; padding: 0; min-height: 100vh;
+      display: flex; flex-direction: column;
+      background: #e6ecf0; color: #222;
+    }
+    .toolbar {
+      background: #f4f4f4; padding: .8rem 1rem;
+      display: flex; gap: .5rem; border-bottom: 1px solid #ccc;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .toolbar button {
+      padding: .5rem 1rem; border: none; background: #0072ff; color: #fff;
+      border-radius: 8px; cursor: pointer; font-weight: 600; min-width: 100px;
+    }
+    .toolbar button:hover { background: #005bb5; }
+    .main { display: flex; flex: 1; overflow: hidden; flex-wrap: wrap; }
+    .editor-container {
+      flex: 1; padding: 2rem; display: flex; justify-content: center; align-items: flex-start;
+      min-width: 300px;
+    }
+    #editor {
+      background: #fff; width: 21cm; min-height: 29.7cm; padding: 2cm;
+      border: 1px solid #ccc; box-shadow: 0 0 10px rgba(0,0,0,.1);
+      border-radius: 8px; overflow-y: auto;
+    }
+    #editor h1 { text-align: center; color: #0072ff; }
+    #editor table { width: 100%; margin-top: 2rem; border-collapse: collapse; }
+    #editor td {
+      width: 33%; vertical-align: top; padding: 1rem; border: 1px solid #ccc;
+    }
+    #editor img {
+      max-width: 100%; border-radius: 8px; border: 1px solid #ddd; margin-top: .5rem;
+    }
+    .sidebar {
+      width: 280px; background: #fff; padding: 1rem;
+      border-left: 1px solid #ccc; min-width: 280px;
+    }
+    .sidebar h3 { margin-top: 0; }
+    .sidebar select, .sidebar button {
+      width: 100%; margin: .5rem 0; padding: .6rem; font-size: 1rem;
+      border-radius: 8px; border: 1px solid #ccc;
+    }
+    .btn-action {
+      background: #00c6ff; color: #fff; border: none; font-weight: 600; cursor: pointer;
+    }
+    .btn-action:hover { background: #0099cc; }
+    .link-area { margin-top: 1rem; text-align: center; }
+    .link-area a {
+      color: #0072ff; font-weight: bold; font-size: 1rem;
+      text-decoration: underline; display: block; margin: .3rem 0; word-break: break-word;
+    }
+    .controls-group {
+      margin-bottom: 15px; display: flex; flex-direction: column;
+      align-items: center; gap: 10px;
+    }
+    .cell-control-buttons, .row-control-buttons {
+      display: flex; gap: 10px; justify-content: center; width: 100%;
+    }
+    .cell-control-buttons button, .row-control-buttons button {
+      padding: .4rem .8rem; font-size: .9rem; border-radius: 5px; cursor: pointer;
+      font-weight: 600; display: flex; align-items: center; gap: 5px;
+    }
+    .add-cell-btn, .add-row-btn { background: #28a745; color: #fff; border: none; }
+    .add-cell-btn:hover, .add-row-btn:hover { background: #218838; transform: scale(1.05); }
+    .remove-cell-btn, .remove-row-btn { background: #dc3545; color: #fff; border: none; }
+    .remove-cell-btn:hover, .remove-row-btn:hover { background: #c82333; transform: scale(1.05); }
+    .row-control-buttons button {
+      padding: .6rem; border-radius: 50%; width: 40px; height: 40px;
+      justify-content: center; transition: transform .2s;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; font-size: 20px;
+    }
+    @media print {
+      .toolbar, .sidebar, .btn-action, .link-area, .controls-group { display: none !important; }
+      #editor { width: 100%; padding: 0; border: none; box-shadow: none; }
+    }
+    @media screen and (max-width:768px) {
+      .main { flex-direction: column; }
+      .editor-container, .sidebar {
+        width: 100%; padding: 1rem; border-left: none; border-top: 1px solid #ccc;
+      }
+      .toolbar button { flex: 1 1 auto; font-size: .9rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="toolbar">
+    <button onclick="format('bold')">Grassetto</button>
+    <button onclick="format('italic')">Corsivo</button>
+    <button onclick="format('highlight')">Evidenzia</button>
+    <button onclick="window.print()">Stampa</button>
+    <button onclick="generaDueLink()">Genera Link</button>
+    <button onclick="pulisciTabella()">Pulisci Tabella</button>
+  </div>
+
+  <div class="main">
+    <div class="editor-container">
+      <div id="editor" contenteditable="true">
+        <h1>Piano di allenamento</h1>
+        <table id="tabella-esercizi"></table>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <h3>Inserisci esercizio</h3>
+      <select id="esercizioSelect">
+        <option value="">-- Seleziona --</option>
+        <option value="Jumping Jacks">Jumping Jacks</option>
+        <option value="Flessioni">Flessioni</option>
+        <option value="Addominali">Addominali</option>
+        <option value="Squat">Squat</option>
+      </select>
+      <button class="btn-action" onclick="aggiungiEsercizioDaMenu()">Aggiungi</button>
+      <div class="link-area" id="link-output"></div>
+      <div class="link-area" id="link-palestra-output"></div>
+    </div>
+  </div>
+
+  <script>
+    const esercizi = {
+      "Jumping Jacks": { titolo: "Jumping Jacks", tipo: "Corpo Libero", categoria: "Riscaldamento", img: "placeholder_jumping_jacks.jpeg", video: "FnqdxybhJ7Y" },
+      "Flessioni": { titolo: "Flessioni", tipo: "Corpo Libero", categoria: "Forza", img: "placeholder_flessioni.jpeg", video: "dQw4w9WgXcQ" },
+      "Addominali": { titolo: "Addominali", tipo: "Corpo Libero", categoria: "Core", img: "placeholder_addominali.jpeg", video: "aBcDeFgHijk" },
+      "Squat": { titolo: "Squat", tipo: "Corpo Libero", categoria: "Forza", img: "placeholder_squat.jpeg", video: "XyZ12345678" }
+    };
+
+    function createControlsForRow(row) {
+      const controlsGroup = document.createElement('div');
+      controlsGroup.className = 'controls-group';
+      const cellControls = document.createElement('div');
+      cellControls.className = 'cell-control-buttons';
+      cellControls.innerHTML = `
+        <button class="add-cell-btn" onclick="aggiungiCella(this)">Aggiungi Cella</button>
+        <button class="remove-cell-btn" onclick="rimuoviCella(this)">Rimuovi Cella</button>
+      `;
+      const rowControls = document.createElement('div');
+      rowControls.className = 'row-control-buttons';
+      rowControls.innerHTML = `
+        <button class="add-row-btn" onclick="aggiungiRiga(this)" title="Aggiungi Riga">
+          <span class="material-symbols-outlined">add</span>
+        </button>
+        <button class="remove-row-btn" onclick="rimuoviRiga(this)" title="Rimuovi Riga">
+          <span class="material-symbols-outlined">delete</span>
+        </button>
+      `;
+      controlsGroup.append(cellControls, rowControls);
+      row.after(controlsGroup);
+    }
+
+    function aggiungiEsercizioDaMenu() {
+      const sel = document.getElementById('esercizioSelect').value;
+      if (!sel) return;
+      const t = document.getElementById('tabella-esercizi');
+      let cell = [...t.querySelectorAll('td')].find(c => !c.innerHTML.trim());
+      if (!cell) { aggiungiRiga(null); cell = t.rows[t.rows.length - 1].cells[0]; }
+      const { titolo, img } = esercizi[sel];
+      cell.innerHTML = `<h2>${titolo}</h2><img src="${img}" alt="${titolo}">`;
+    }
+
+    function format(cmd) {
+      if (cmd === 'highlight') document.execCommand('backColor', false, 'yellow');
+      else document.execCommand(cmd, false, null);
+    }
+
+    function generaDueLink() {
+      const html = document.getElementById('editor').innerHTML;
+      const enc = encodeURIComponent(html);
+      document.getElementById('link-output').innerHTML =
+        `<a href="view.html?doc=${enc}" target="_blank">Visualizza Documento</a>`;
+      const titoli = [...new DOMParser().parseFromString(html, 'text/html').querySelectorAll('h2')]
+        .map(h => h.textContent.trim());
+      const videos = titoli.map(t => esercizi[t]?.video).filter(Boolean);
+      const data = encodeURIComponent(JSON.stringify({ html, videos }));
+      document.getElementById('link-palestra-output').innerHTML =
+        `<a href="allenamento%20user/palestra.html?data=${data}" target="_blank">Apri Palestra (video sincronizzati)</a>`;
+    }
+
+    function aggiungiCella(btn) {
+      const tr = btn.closest('.controls-group').previousElementSibling;
+      if (tr.cells.length < 6) tr.appendChild(document.createElement('td'));
+    }
+    function rimuoviCella(btn) {
+      const tr = btn.closest('.controls-group').previousElementSibling;
+      if (tr.cells.length > 1) tr.deleteCell(-1);
+      else alert('Ogni riga deve avere almeno una cella.');
+    }
+    function aggiungiRiga(btn) {
+      const t = document.getElementById('tabella-esercizi');
+      const tr = document.createElement('tr');
+      tr.append(...Array(3).fill().map(() => document.createElement('td')));
+      if (btn) {
+        const ref = btn.closest('.controls-group');
+        t.insertBefore(tr, ref.nextElementSibling);
+      } else {
+        t.appendChild(tr);
+      }
+      createControlsForRow(tr);
+    }
+    function rimuoviRiga(btn) {
+      const t = document.getElementById('tabella-esercizi');
+      if (t.rows.length === 1) { alert('Deve rimanere almeno una riga.'); return; }
+      const ref = btn.closest('.controls-group');
+      const tr = ref.previousElementSibling;
+      tr.remove();
+      ref.remove();
+    }
+
+    // Funzione per sistemare "confusioni"
+    function pulisciTabella() {
+      const t = document.getElementById('tabella-esercizi');
+      // Rimuove righe vuote
+      [...t.rows].forEach(row => {
+        const haContenuto = [...row.cells].some(c => c.textContent.trim() || c.querySelector('img'));
+        if (!haContenuto && t.rows.length > 1) {
+          const next = row.nextElementSibling;
+          const controls = next && next.classList.contains('controls-group') ? next : null;
+          row.remove();
+          if (controls) controls.remove();
+        }
+      });
+      // Assicura celle tra 1 e 6
+      [...t.rows].forEach(row => {
+        if (row.cells.length < 1) {
+          row.appendChild(document.createElement('td'));
+        } else if (row.cells.length > 6) {
+          while (row.cells.length > 6) row.deleteCell(-1);
+        }
+      });
+      // Ricrea controlli
+      document.querySelectorAll('.controls-group').forEach(c => c.remove());
+      [...t.rows].forEach(row => createControlsForRow(row));
+      // Rimuove script/iframe non desiderati
+      [...t.querySelectorAll('script, iframe')].forEach(el => el.remove());
+      // Aggiorna link
+      generaDueLink();
+      alert("Tabella pulita e ottimizzata!");
+    }
+
+    document.addEventListener('DOMContentLoaded', () => aggiungiRiga(null));
+  </script>
+</body>
+</html>

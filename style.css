@@ -1,0 +1,398 @@
+ body {
+     background-color: #0d0d14;
+     font-family: 'Poppins', sans-serif;
+     margin: 0;
+     padding: 0;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     min-height: 100vh;
+     transition: background-color 0.3s ease;
+     padding-top: 24px;
+     padding-bottom: 24px;
+ }
+
+ h1 {
+     color: white;
+     font-size: 50px;
+     margin-top: 20px;
+     margin-bottom: 300px;
+     font-weight: bolder;
+ }
+
+ #toggleThemeBtn {
+     background: transparent;
+     border: 2px solid #2563eb;
+     color: #2563eb;
+     font-weight: 600;
+     padding: 6px 12px;
+     border-radius: 8px;
+     cursor: pointer;
+     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+     user-select: none;
+     font-size: 0.875rem;
+     margin-bottom: 16px;
+     align-self: flex-end;
+     max-width: 120px;
+ }
+
+ #toggleThemeBtn:hover {
+     background-color: #2563eb;
+     color: white;
+ }
+
+ body.light {
+     background-color: #f9fafb;
+ }
+
+ body.light #toggleThemeBtn {
+     border-color: #1e40af;
+     color: #1e40af;
+ }
+
+ body.light #toggleThemeBtn:hover {
+     background-color: #1e40af;
+     color: white;
+ }
+
+ #loginSection {
+     background: rgba(26, 26, 39, 0.9);
+     backdrop-filter: saturate(180%) blur(20px);
+     border-radius: 12px;
+     padding: 24px 32px;
+     width: 100%;
+     max-width: 360px;
+     box-shadow: 0 0 15px #0a0a12;
+     color: white;
+     position: relative;
+     transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+     margin-top: 250px;
+ }
+
+ body.light #loginSection {
+     background: rgba(255, 255, 255, 0.9);
+     color: #111827;
+     box-shadow: 0 0 15px #cbd5e1;
+ }
+
+ #logoContainer {
+     position: absolute;
+     top: 24px;
+     left: 24px;
+     width: 40px;
+     height: 40px;
+     border-radius: 12px;
+     background: #1a1a27;
+     box-shadow:
+         inset 0 0 8px #3b3b5c,
+         0 0 10px #1f1f2e;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     transition: background 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ body.light #logoContainer {
+     background: #e5e7eb;
+     box-shadow:
+         inset 0 0 8px #a1a5aa,
+         0 0 10px #d1d5db;
+ }
+
+ #logoContainer img {
+     width: 24px;
+     height: 24px;
+     border-radius: 6px;
+     transition: filter 0.3s ease;
+ }
+
+ body.light #logoContainer img {
+     filter: none;
+ }
+
+ #loginSection h2 {
+     font-weight: 600;
+     font-size: 1.25rem;
+     margin-bottom: 0.25rem;
+     padding-left: 56px;
+     transition: color 0.3s ease;
+ }
+
+ body.light #loginSection h2 {
+     color: #374151;
+ }
+
+ #loginSection p.subtitle {
+     font-size: 0.75rem;
+     color: #6b7280;
+     margin-top: 0;
+     margin-bottom: 1.5rem;
+     padding-left: 56px;
+     transition: color 0.3s ease;
+ }
+
+ body.light #loginSection p.subtitle {
+     color: #6b7280;
+ }
+
+ #loginSection input[type="email"],
+ #loginSection input[type="password"] {
+     width: 100%;
+     background-color: #1a1a27;
+     border: none;
+     border-radius: 8px;
+     padding: 10px 36px 10px 12px;
+     margin-bottom: 1rem;
+     color: white;
+     font-size: 0.875rem;
+     outline-offset: 2px;
+     outline-color: transparent;
+     transition: outline-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+     position: relative;
+ }
+ body.light h1 {
+    color: rgb(0, 28, 65);
+ }
+
+ body.light #loginSection input[type="email"],
+ body.light #loginSection input[type="password"] {
+     background-color: #f3f4f6;
+     color: #374151;
+ }
+
+ #loginSection input[type="email"]::placeholder,
+ #loginSection input[type="password"]::placeholder {
+     color: #6b7280;
+     transition: color 0.3s ease;
+ }
+
+ body.light #loginSection input[type="email"]::placeholder,
+ body.light #loginSection input[type="password"]::placeholder {
+     color: #9ca3af;
+ }
+
+ #loginSection input[type="email"]:focus,
+ #loginSection input[type="password"]:focus {
+     outline-color: #2563eb;
+     background-color: #1f1f2e;
+     color: white;
+ }
+
+ body.light #loginSection input[type="email"]:focus,
+ body.light #loginSection input[type="password"]:focus {
+     background-color: #e5e7eb;
+     outline-color: #2563eb;
+     color: #111827;
+ }
+
+ #emailWrapper {
+     position: relative;
+ }
+
+ #emailIcon {
+     position: absolute;
+     right: 10px;
+     top: 50%;
+     transform: translateY(-50%);
+     width: 20px;
+     height: 20px;
+     filter: drop-shadow(0 0 2px #0ea5e9);
+     pointer-events: none;
+     transition: filter 0.3s ease;
+ }
+
+ body.light #emailIcon {
+     filter: drop-shadow(0 0 2px #3b82f6);
+ }
+
+ #loginSection button {
+     background: linear-gradient(to bottom, #2a2a3f, #1f1f2e);
+     color: white;
+     font-size: 0.875rem;
+     font-weight: 500;
+     border: none;
+     border-radius: 8px;
+     padding: 10px 0;
+     width: 120px;
+     cursor: pointer;
+     transition: filter 0.2s ease, background 0.3s ease, color 0.3s ease;
+     display: block;
+     margin: 0 auto;
+ }
+
+ #loginSection button:hover {
+     filter: brightness(1.1);
+ }
+
+ body.light #loginSection button {
+     background: linear-gradient(to bottom, #e0e7ff, #c7d2fe);
+     color: #1e40af;
+ }
+
+ body.light #loginSection button:hover {
+     filter: brightness(1.1);
+ }
+
+ #loginStatus {
+     margin-top: 1rem;
+     font-size: 0.875rem;
+     text-align: center;
+     min-height: 1.25rem;
+     color: #f87171;
+     /* default red for error */
+     transition: color 0.3s ease;
+ }
+
+ body.light #loginStatus {
+     color: #b91c1c;
+ }
+
+ #extraText {
+     margin-top: 1rem;
+     font-size: 0.875rem;
+     text-align: center;
+     color: #9ca3af;
+     padding: 0 10px;
+     transition: color 0.3s ease;
+ }
+
+ body.light #extraText {
+     color: #6b7280;
+ }
+
+ /**Grafica per i pazienti**/
+ #listaUtenti {
+  background: rgba(26, 26, 39, 0.9);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 12px;
+  padding: 32px;
+  width: 100%;
+  max-width: 800px;
+  margin: 32px auto;
+  box-shadow: 0 0 20px #0a0a12;
+  color: white;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Light mode override */
+body.light #listaUtenti {
+  background: rgba(255, 255, 255, 0.9);
+  color: #111827;
+  box-shadow: 0 0 20px #cbd5e1;
+}
+
+#listaUtenti h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Input ricerca */
+#listaUtenti input[type="text"] {
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #1f1f2e;
+  color: #111827;
+  transition: background-color 0.3s ease;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+
+body.light #listaUtenti input[type="text"] {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* Pulsante esporta */
+#listaUtenti button {
+  display: inline-block;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3b82f6;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: 8px;
+}
+
+#listaUtenti button:hover {
+  background-color: #2563eb;
+  transform: scale(1.02);
+}
+
+body.light #listaUtenti button {
+  background-color: #2563eb;
+}
+
+#usersContainer {
+  margin-top: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 16px;
+  color: inherit;
+  font-size: 0.95rem;
+}
+
+/*Rimuovi link e aggiungi*/
+/* Stile per ciascun blocco link+button */
+#usersContainer > div > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: #1e1e1e; /* tema scuro */
+  color: white;
+  gap: 10px;
+  word-break: break-word;
+}
+
+body.light #usersContainer > div > div {
+  background-color: #f2f2f2;
+  color: #000;
+}
+
+/* Link */
+#usersContainer a {
+  color: #3b82f6;
+  text-decoration: underline;
+  flex: 1;
+}
+
+/* Pulsante Rimuovi */
+#usersContainer button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#usersContainer button:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+#toggleThemeBtn {
+    margin-right: 40px;
+}
+
+/*Responsive da 1000px in sotto*/
+@media (max-width: 1000px) {
+    #loginSection {
+        margin-top: 100px;
+    }
+
+    #toggleThemeBtn {
+    margin-top: 55px;
+    }
+
+}
+
