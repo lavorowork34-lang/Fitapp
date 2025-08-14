@@ -105,4 +105,44 @@
   </script>
 </body>
 
+<button>Torna <a href="app.html">indietro</a></button>
+  
+  <style>
+    /* Stile per il pulsante con effetto vetro */
+button {
+  /* Dimensione del pulsante e spaziatura interna */
+  padding: 12px 24px;
+  border-radius: 12px;
+
+  /* Colori e bordi */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  /* Effetto vetro */
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  /* Allineamento testo e font */
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  
+  /* Transizione per un effetto più fluido al passaggio del mouse */
+  transition: all 0.3s ease;
+}
+
+/* Stile per il link all'interno del pulsante */
+button a {
+  color: inherit; /* Mantiene lo stesso colore del testo del pulsante */
+  text-decoration: none; /* Rimuove la sottolineatura tipica dei link */
+}
+
+/* Effetto al passaggio del mouse (hover) */
+button:hover {
+  background: rgba(255, 255, 255, 0.3); /* Rende lo sfondo leggermente più opaco */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Aumenta leggermente l'ombra */
+  transform: translateY(-2px); /* Sposta il pulsante leggermente verso l'alto */
+}
+  </style>
 </html>
