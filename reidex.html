@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Piano Alimentare</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    #pdfLinkContainer a {
+      color: blue;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Il tuo piano alimentare</h1>
+
+  <div id="pdfLinkContainer"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// Config Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCAD8IYgzEyIs7a62p2iCYHBs_VKESZjnI",
+  authDomain: "app-fitness-b7c26.firebaseapp.com",
+  projectId: "app-fitness-b7c26",
+  storageBucket: "app-fitness-b7c26.firebasestorage.app",
+  messagingSenderId: "150986445380",
+  appId: "1:150986445380:web:d54b2ce3aa12f0c1106211"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const pdfLinkContainer = document.getElementById('pdfLinkContainer');
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    try {
+      const userDoc = await db.collection('Users').doc(user.uid).get();
+
+      if (!userDoc.exists) {
+        pdfLinkContainer.textContent = "Nessun piano trovato per l'utente.";
+        return;
+      }
+
+      const docData = userDoc.data();
+
+      if (!docData.PDF || docData.PDF.length === 0) {
+        pdfLinkContainer.textContent = "Nessun piano PDF disponibile.";
+        return;
+      }
+
+      const link = docData.PDF[0];
+      const a = document.createElement('a');
+      a.href = link;
+      a.textContent = "Visualizza il piano alimentare";
+      a.target = "_blank";
+
+      pdfLinkContainer.textContent = '';
+      pdfLinkContainer.appendChild(a);
+
+    } catch (error) {
+      pdfLinkContainer.textContent = "Errore nel caricamento dei dati.";
+      console.error(error);
+    }
+
+  } else {
+    pdfLinkContainer.textContent = "Devi effettuare il login prima di vedere il piano alimentare.";
+  }
+});
+</script>
+
+</body>
+</html>
